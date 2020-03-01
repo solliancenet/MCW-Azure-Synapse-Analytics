@@ -49,6 +49,7 @@ Wide World Importers (a fictitious retail customer) has hundreds of brick and mo
 
 High Level Architecture
 *	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+
 Ingest & Store
 *	WWI does not want to have to rely on specialists to create data ingest and data transformation pipelines. They would like to split the problem into two efforts: 
     * land data from new data sources in their data lake
