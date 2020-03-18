@@ -199,11 +199,10 @@ They believe that using analytics on top of retail data has the potential to unl
 
 They would like to combine their retail lifecycle data including customer data, operations data, sourcing and supplier data as well as transaction data with analytics to reduce churn, enhance loyalty, advance customer journeys, enable the ability to conduct contextual marketing, measure attribution and provide insights across their enterprise to holistically drive growth across the organization. 
 
-They would like to use historical campaign and customer analytics data and make decisions for the present.
-And even more exciting, they would like to use real-time streaming data from Twitter as well as from IoT sensors in their brick and mortar locations. They would like to use data from the present moment to take decisions for the next moment.
-Then finally, they would like to use their data to predict the future – like product recommendations and numbers of visitors to stores.
+They are looking to use historical campaign and customer analytics data and make decisions for the present.
+Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI see an opportunity to use their data to predict the future, intially by making product recommendations.
 
-According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 26 billion rows. But that is not their only enteprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able queries across such data with results returning in seconds.
+According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 26 billion rows. But that is not their only enteprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
 
 In addition to those data sources, they have in-store IoT sensors producing telemetry data that tracks the traffic patterns of customers walking the aisles. Each store has 50 sensors, and they have 100 stores equipped to provide this real-time data. Using this data they want to understand in which departments (or groups of aisles) people are spending most of their time, and which of those they are not. They would like a solution to ensure that this data gets ingested and processed in near real time, allowing them to quickly identify patterns that can be shared between stores. For example, as stores open on the East Coast, patterns detected in early buying behavior could inform last minute offers and in store product placement of products in their West Coast stores that have yet to open.
 
@@ -214,7 +213,7 @@ They would like to accomplish both using tools that simplify the building of the
 
 Peter also mentioned, that in his experience a point of frustration with the tools was how much setup was required before any preliminary exploratory data analysis could be performed. So he would prefer a solution that allows WWI to quickly explore the raw ingested data to understand its contents?
 
-To bring their entire operation into perspective, Wide World Importers would like to create a dashboard where they can see their KPI's derived from historical data, real-time twitter sentiment and sensor data, and key product recommendations generated using machine learning.
+To bring their entire operation into perspective, Wide World Importers would like to create a dashboard where they can see their KPI's derived from historical data, real-time twitter sentiment and IoT sensor data, and key product recommendations generated using machine learning.
 
 
 ### Customer needs 
@@ -389,6 +388,8 @@ The primary audience is the business decision makers and technology decision mak
 
 **High Level Architecture**
 *	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+
+    ![High level architecture](media/preferred-solution.png)
 
 **Ingest & Store**
 
