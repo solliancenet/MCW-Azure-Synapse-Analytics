@@ -12,7 +12,6 @@ Whiteboard design session trainer guide
 March 2020
 </div>
 
-
 Information in this document, including URL and other Internet Web site references, is subject to change without notice. Unless otherwise noted, the example companies, organizations, products, domain names, e-mail addresses, logos, people, places, and events depicted herein are fictitious, and no association with any real company, organization, product, domain name, e-mail address, logo, person, place or event is intended or should be inferred. Complying with all applicable copyright laws is the responsibility of the user. Without limiting the rights under copyright, no part of this document may be reproduced, stored in or introduced into a retrieval system, or transmitted in any form or by any means (electronic, mechanical, photocopying, recording, or otherwise), or for any purpose, without the express written permission of Microsoft Corporation.
 
 Microsoft may have patents, patent applications, trademarks, copyrights, or other intellectual property rights covering subject matter in this document. Except as expressly provided in any written license agreement from Microsoft, the furnishing of this document does not give you any license to these patents, trademarks, copyrights, or other intellectual property.
@@ -63,25 +62,25 @@ Thank you for taking time to support the whiteboard design sessions as a trainer
 
 An amazing trainer:
 
--   Creates a safe environment in which learning can take place.
+- Creates a safe environment in which learning can take place.
 
--   Stimulates the participant's thinking.
+- Stimulates the participant's thinking.
 
--   Involves the participant in the learning process.
+- Involves the participant in the learning process.
 
--   Manages the learning process (on time, on topic, and adjusting to benefit participants).
+- Manages the learning process (on time, on topic, and adjusting to benefit participants).
 
--   Ensures individual participant accountability.
+- Ensures individual participant accountability.
 
--   Ties it all together for the participant.
+- Ties it all together for the participant.
 
--   Provides insight and experience to the learning process.
+- Provides insight and experience to the learning process.
 
--   Effectively leads the whiteboard design session discussion.
+- Effectively leads the whiteboard design session discussion.
 
--   Monitors quality and appropriateness of participant deliverables.
+- Monitors quality and appropriateness of participant deliverables.
 
--   Effectively leads the feedback process.
+- Effectively leads the feedback process.
 
 ## Whiteboard design session flow 
 
@@ -93,11 +92,11 @@ Each whiteboard design session uses the following flow:
 
 Analyze your customer's needs.
 
--   Customer's background, situation, needs and technical requirements
+- Customer's background, situation, needs and technical requirements
 
--   Current customer infrastructure and architecture
+- Current customer infrastructure and architecture
 
--   Potential issues, objectives and blockers
+- Potential issues, objectives and blockers
 
 **Step 2: Design a proof of concept solution (60 minutes)**
 
@@ -105,13 +104,13 @@ Analyze your customer's needs.
 
 Design a solution and prepare to present the solution to the target customer audience in a 15-minute chalk-talk format.
 
--   Determine your target customer audience.
+- Determine your target customer audience.
 
--   Determine customer's business needs to address your solution.
+- Determine customer's business needs to address your solution.
 
--   Design and diagram your solution.
+- Design and diagram your solution.
 
--   Prepare to present your solution.
+- Prepare to present your solution.
 
 **Step 3: Present the solution (30 minutes)**
 
@@ -119,29 +118,29 @@ Design a solution and prepare to present the solution to the target customer aud
 
 Present solution to your customer:
 
--   Present solution
+- Present solution
 
--   Respond to customer objections
+- Respond to customer objections
 
--   Receive feedback
+- Receive feedback
 
 **Wrap-up (15 minutes)**
 
--   Review preferred solution
+- Review preferred solution
 
 ## Before the whiteboard design session: How to prepare
 
 Before conducting your first whiteboard design session:
 
--   Read the Student guide (including the case study) and Trainer guide.
+- Read the Student guide (including the case study) and Trainer guide.
 
--   Become familiar with all key points and activities.
+- Become familiar with all key points and activities.
 
--   Plan the point you want to stress, which questions you want to drive, transitions, and be ready to answer questions.
+- Plan the point you want to stress, which questions you want to drive, transitions, and be ready to answer questions.
 
--   Prior to the whiteboard design session, discuss the case study to pick up more ideas.
+- Prior to the whiteboard design session, discuss the case study to pick up more ideas.
 
--   Make notes for later.
+- Make notes for later.
 
 ## During the whiteboard design session: Tips for an effective whiteboard design session
 
@@ -151,11 +150,11 @@ Before conducting your first whiteboard design session:
 
 When participants are doing activities, you can **look ahead to refresh your memory**.
 
--   **Adjust activity and whiteboard design session pace** as needed to allow time for presenting, feedback, and sharing.
+- **Adjust activity and whiteboard design session pace** as needed to allow time for presenting, feedback, and sharing.
 
--   **Add examples, points, and stories** from your own experience. Think about stories you can share that help you make your points clearly and effectively.
+- **Add examples, points, and stories** from your own experience. Think about stories you can share that help you make your points clearly and effectively.
 
--   **Consider creating a "parking lot"** to record issues or questions raised that are outside the scope of the whiteboard design session or can be answered later. Decide how you will address these issues, so you can acknowledge them without being derailed by them.
+- **Consider creating a "parking lot"** to record issues or questions raised that are outside the scope of the whiteboard design session or can be answered later. Decide how you will address these issues, so you can acknowledge them without being derailed by them.
 
 ***Have fun**! Encourage participants to have fun and share!*
 
@@ -167,13 +166,13 @@ When participants are doing activities, you can **look ahead to refresh your mem
 
 **Wait for responses**. If you ask a question such as, "What's your experience with (fill in the blank)?" then wait. Do not be afraid of a little silence. If you leap into the silence, your participants will feel you are not serious about involving them and will become passive. Give participants a chance to think, and if no one answers, patiently ask again. You will usually get a response.
 
-#  Azure Synapse Analytics whiteboard design session student guide
+# Azure Synapse Analytics whiteboard design session student guide
 
-## Abstract and learning objectives 
+## Abstract and learning objectives
 
-This workshop will challenged students to know about the breadth of functionality available within Azure Synapse Analytics, as well to learn how to best configure a comprehensive advanced analytics solution for an enterprise customer in the retail space.
+This workshop will challenge students to know about the breadth of functionality available within Azure Synapse Analytics, as well as to learn how to best configure a comprehensive advanced analytics solution for an enterprise customer in the retail space.
 
-## Step 1: Review the customer case study 
+## Step 1: Review the customer case study
 
 **Outcome**
 
@@ -183,25 +182,25 @@ Timeframe: 15 minutes
 
 Directions:  With all participants in the session, the facilitator/SME presents an overview of the customer case study along with technical tips.
 
-1.  Meet your table participants and trainer.
+1. Meet your table participants and trainer.
 
-2.  Read all of the directions for steps 1-3 in the student guide.
+2. Read all of the directions for steps 1-3 in the student guide.
 
-3.  As a table team, review the following customer case study.
+3. As a table team, review the following customer case study.
 
 ### Customer situation
 
-Wide World Importers, WWI, has hundreds of brick and mortar stores and an online store where they sell a variety of products. 
+Wide World Importers (WWI) has hundreds of brick and mortar stores and an online store where they sell a variety of products.
 
-WWI believes that data is the oxygen of retail. Retail has never been short of data, but they have not been able to maximize the value of this data. They struggle with fragmented data and a lack of understanding of customer behavior and expectations and believe that a successful customer experience strategy is founded upon the effective use of data. 
+WWI believes that data is the oxygen of retail. Retail has never been short of data, but they have not been able to maximize the value of this data. They struggle with fragmented data and a lack of understanding of customer behavior and expectations and believe that a successful customer experience strategy is founded upon the effective use of data.
 
-They understand that using analytics on top of retail data has the potential to unlock ways for them to improve personalized, omni-channel campaigns that engage potential and existing customers across their buying journey. 
+They understand that using analytics on top of retail data has the potential to unlock ways for them to improve personalized, omni-channel campaigns that engage potential and existing customers across their buying journey.
 
-They would like to combine their retail lifecycle data including customer data, operations data, sourcing and supplier data as well as transaction data with analytics to reduce churn, enhance loyalty, advance customer journeys, enable the ability to conduct contextual marketing, measure attribution and provide insights across their enterprise to holistically drive growth across the organization. 
+They would like to combine their retail lifecycle data including customer data, operations data, sourcing and supplier data as well as transaction data with analytics to reduce churn, enhance loyalty, advance customer journeys, enable the ability to conduct contextual marketing, measure attribution and provide insights across their enterprise to holistically drive growth across the organization.
 
-They are looking to use historical campaign and customer analytics data and make decisions for the present. Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI sees an opportunity to use their data to predict the future, intially by making product recommendations.
+They are looking to use historical campaign and customer analytics data and make decisions for the present. Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI sees an opportunity to use their data to predict the future, initially by making product recommendations.
 
-According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 30  billion rows. But that is not their only enteprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
+According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 30  billion rows. But that is not their only enterprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
 
 In addition to those data sources, they have in-store IoT sensors producing telemetry data that tracks the traffic patterns of customers walking the aisles. Each store has 50 sensors, and they have 100 stores equipped to provide this real-time data. Using this data they want to understand in which departments (or groups of aisles) people are spending most of their time, and which of those they are not. They would like a solution to ensure that this data gets ingested and processed in near real time, allowing them to quickly identify patterns that can be shared between stores. For example, as stores open on the East Coast, patterns detected in early buying behavior could inform last minute offers and in store product placement of products in their West Coast stores that have yet to open.
 
@@ -211,43 +210,37 @@ Peter also mentioned that, in his experience, a point of frustration with the to
 
 To bring their entire operation into perspective, Wide World Importers would like to create a dashboard where they can see their KPI's derived from historical data, real-time twitter sentiment and IoT sensor data, and key product recommendations generated using machine learning.
 
+### Customer needs
 
-### Customer needs 
+1. Gain business insights using a combination of historical, real-time, and predictive analytics.
 
-1.  Gain business insights using a combination of historical, real-time, and predictive analytics. 
+2. Have a unified approach to handling their structured and unstructured data sources.
 
-2.  Have a unified approach to handling their structured and unstructured data sources.
+3. Enable their team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data.
 
-3.  Enable their team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data.
+4. Enable business analysts and data science/data engineering teams to share a single source of truth.
 
-4.  Enable business analysts and data science/data engineering teams to share a single source of truth. 
+5. They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
 
-5.  They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
+6. Prefer to accomplish this working withing a single collaborative environment.
 
-6.  Prefer to accomplish this working withing a single collaborative environment.
+7. They have concerns about performance, and want to make sure they can understand the core approaches they should take to ensure the best performance of the solution recommended.
 
-7.  They have concerns about performance, and want to make sure they can understand the core approaches they should take to ensure the best performance of the solution recommended.
+8. Need a solution that provides a consistent security model across all components.
 
-8.  Need a solution that provides a consistent security model across all components.
+### Customer objections
 
+1. WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution.
 
-### Customer objections 
+2. They have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
 
-1.  WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution. 
+3. Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
 
-2.  The have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
+4. They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
 
-3.  Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
+5. If their solution provide serverless querying, are they prevented from using pre-allocated query resources?
 
-4.  They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
-
-5.  If their solution provide serverless querying, are they prevented from using pre-allocated query resources? 
-
-6.  Is my data protected at rest and do I have control over the keys used to encrypt it?
-
-
-
-
+6. Is my data protected at rest and do I have control over the keys used to encrypt it?
 
 ### Infographic for common scenarios
 
@@ -265,9 +258,9 @@ Timeframe: 60 minutes
 
 Directions: With all participants at your table, answer the following questions and list the answers on a flip chart:
 
-1.  Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
+1. Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
 
-2.  What customer business needs do you need to address with your solution?
+2. What customer business needs do you need to address with your solution?
 
 **Design**
 
@@ -275,105 +268,99 @@ Directions: With all participants at your table, respond to the following questi
 
 *High Level Architecture*
 
-1.	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+1.Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
 *Ingest & Store*
 
-1.	For the solution you recommend, what specific approach would you say to WWI is the most performant for moving flat file data from the ingest storage locations to the data lake? 
+1. For the solution you recommend, what specific approach would you say to WWI is the most efficient for moving flat file data from the ingest storage locations to the data lake?
 
-2.	What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
+2. What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
 
-3.	When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
+3. When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
 
-4.	How will you ingest streaming data from the in-store IoT devices?
-
+4. How will you ingest streaming data from the in-store IoT devices?
 
 *Transform*
 
-1.	Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
+1. Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
 
-2.	When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
+2. When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
 
-3.	Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code? 
+3. Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code?
 
-4.	Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
+4. Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
 
-5.	Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
-
-
+5. Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
 
 *Query*
 
 Their sales transaction dataset exceeds a billion rows. For their downstream reporting queries, they need to be able to join, project and filter these rows in no longer than 10s of seconds. WWI is concerned their data is just too big to do this.
 
-1.	What specific indexing techniques should they use to reach this kind of performance for their fact tables? Why?
+1. What specific indexing techniques should they use to reach this kind of performance for their fact tables? Why?
 
-2.	Would you recommend the same approach for tables they have with less than 100 million rows?
+2. Would you recommend the same approach for tables they have with less than 100 million rows?
 
-3.	How should they configure indexes on their smaller lookup tables (e.g., those that contain store names and addresses)?
+3. How should they configure indexes on their smaller lookup tables (e.g., those that contain store names and addresses)?
 
-4.	What would you suggest for their larger lookup tables that are used just for point lookups that retrieve only a single row? How could they makes these more flexible so that queries filtering against different sets of columns would still yield performant lookups?
+4. What would you suggest for their larger lookup tables that are used just for point lookups that retrieve only a single row? How could they makes these more flexible so that queries filtering against different sets of columns would still yield efficient lookups?
 
-5.	What should they use for the fastest loading of staging tables?
+5. What should they use for the fastest loading of staging tables?
   
-6.	What are the typical issues they should look out for with regards to **distributed** table design for the following scenarios? 
-    * Their smallest fact table exceeds several GB’s and by their nature experiences frequent inserts. 
-      
-    *	As they develop the data warehouse, the WWI data team identified some tables created from the raw input that might be useful, but they don’t currently join to other tables and they are not sure of the best columns they should use for distributing the data. 
-       
-    *	 Their data engineers sometimes use temporary staging tables in their data preparation. 
+6. What are the typical issues they should look out for with regards to **distributed** table design for the following scenarios?
 
-7.	Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure? 
+    - Their smallest fact table exceeds several GB’s and by their nature experiences frequent inserts.
 
-8.	What approach can they use to update the JSON data?
+    - As they develop the data warehouse, the WWI data team identified some tables created from the raw input that might be useful, but they don’t currently join to other tables and they are not sure of the best columns they should use for distributing the data.
 
-9.	In some of their queries, they are OK trading off speed of returning counts for a small reduction in accuracy. How might they do this?
+    - Their data engineers sometimes use temporary staging tables in their data preparation.
 
-10.	Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
+7. Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure?
 
+8. What approach can they use to update the JSON data?
 
+9. In some of their queries, they are OK trading off speed of returning counts for a small reduction in accuracy. How might they do this?
+
+10. Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
 
 *Visualize*
 
-1.	What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install? 
+1. What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install?
 
-2.	Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
+2. Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
 
-3.	With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
-
+3. With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
 
 *Manage*
 
-1.	In previous efforts, WWI systems struggled with their popularity. Exploratory queries that were not time sensitive would saturate the available resources and delay the execution of higher priority queries supporting critical reports. Explain how your solution helps to resolve this. 
+1. In previous efforts, WWI systems struggled with their own popularity. Exploratory queries that were not time sensitive would saturate the available resources and delay the execution of higher priority queries supporting critical reports. Explain how your solution helps to resolve this.
 
-2.	What does your solution provide to WWI to help them identify issues such as suboptimal table distribution, data skew, cache misses, tempdb contention and suboptimal plan selection?
+2. What does your solution provide to WWI to help them identify issues such as suboptimal table distribution, data skew, cache misses, `tempdb` contention and suboptimal plan selection?
 
-3.	WWI recognizes there is a balance between the data warehouse software staying up to date and when they can afford downtime that might result. How can they establish their preferences with your solution so they are never caught off guard with an upgrade?
+3. WWI recognizes there is a balance between the data warehouse software staying up to date and when they can afford downtime that might result. How can they establish their preferences with your solution so they are never caught off guard with an upgrade?
 
 *Secure*
 
-1.	How does your solution provide unified authentication, such as across SQL and Spark workloads? 
+1. How does your solution provide unified authentication, such as across SQL and Spark workloads?
 
-2.	How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
+2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
 
-3.	One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options. 
+3. One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options.
 
-4.	Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
+4. Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
 
-5.	Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
- 
-6.	From a network security standpoint, how should your solution be secured?
+5. Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
 
+6. From a network security standpoint, how should your solution be secured?
 
 **Prepare**
 
 Directions: With all participants at your table:
 
-1.  Identify any customer needs that are not addressed with the proposed solution.
+1. Identify any customer needs that are not addressed with the proposed solution.
 
-2.  Identify the benefits of your solution.
+2. Identify the benefits of your solution.
 
-3.  Determine how you will respond to the customer's objections.
+3. Determine how you will respond to the customer's objections.
 
 Prepare a 15-minute chalk-talk style presentation to the customer.
 
@@ -389,27 +376,27 @@ Timeframe: 30 minutes
 
 Directions:
 
-1.  Pair with another table.
+1. Pair with another table.
 
-2.  One table is the Microsoft team and the other table is the customer.
+2. One table is the Microsoft team and the other table is the customer.
 
-3.  The Microsoft team presents their proposed solution to the customer.
+3. The Microsoft team presents their proposed solution to the customer.
 
-4.  The customer makes one of the objections from the list of objections.
+4. The customer makes one of the objections from the list of objections.
 
-5.  The Microsoft team responds to the objection.
+5. The Microsoft team responds to the objection.
 
-6.  The customer team gives feedback to the Microsoft team.
+6. The customer team gives feedback to the Microsoft team.
 
-7.  Tables switch roles and repeat Steps 2-6.
+7. Tables switch roles and repeat Steps 2-6.
 
-##  Wrap-up 
+## Wrap-up
 
 Timeframe: 15 minutes
 
 Directions: Tables reconvene with the larger group to hear the facilitator/SME share the preferred solution for the case study.
 
-##  Additional references
+## Additional references
 
 |    |            |
 |----------|:-------------:|
@@ -434,45 +421,45 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Step 1: Review the customer case study
 
--   Check in with your table participants to introduce yourself as the trainer.
+- Check in with your table participants to introduce yourself as the trainer.
 
--   Ask, "What questions do you have about the customer case study?"
+- Ask, "What questions do you have about the customer case study?"
 
--   Briefly review the steps and timeframes of the whiteboard design session.
+- Briefly review the steps and timeframes of the whiteboard design session.
 
--   Ready, set, go! Let the table participants begin.
+- Ready, set, go! Let the table participants begin.
 
 ## Step 2: Design a proof of concept solution
 
--   Check in with your tables to ensure that they are transitioning from step to step on time.
+- Check in with your tables to ensure that they are transitioning from step to step on time.
 
--   Provide some feedback on their responses to the business needs and design.
+- Provide some feedback on their responses to the business needs and design.
 
-    -   Try asking questions first that will lead the participants to discover the answers on their own.
+  - Try asking questions first that will lead the participants to discover the answers on their own.
 
--   Provide feedback for their responses to the customer's objections.
+- Provide feedback for their responses to the customer's objections.
 
-    -   Try asking questions first that will lead the participants to discover the answers on their own.
+  - Try asking questions first that will lead the participants to discover the answers on their own.
 
 ## Step 3: Present the solution
 
--   Determine which table will be paired with your table before Step 3 begins.
+- Determine which table will be paired with your table before Step 3 begins.
 
--   For the first round, assign one table as the presenting team and the other table as the customer.
+- For the first round, assign one table as the presenting team and the other table as the customer.
 
--   Have the presenting team present their solution to the customer team.
+- Have the presenting team present their solution to the customer team.
 
-    -   Have the customer team provide one objection for the presenting team to respond to.
+  - Have the customer team provide one objection for the presenting team to respond to.
 
-    -   The presentation, objections, and feedback should take no longer than 15 minutes.
+  - The presentation, objections, and feedback should take no longer than 15 minutes.
 
-    -   If needed, the trainer may also provide feedback.
+  - If needed, the trainer may also provide feedback.
 
 ## Wrap-up
 
--   Have the table participants reconvene with the larger session group to hear the facilitator/SME share the following preferred solution.
+- Have the table participants reconvene with the larger session group to hear the facilitator/SME share the following preferred solution.
 
-##  Preferred target audience
+## Preferred target audience
 
 Peter Guerin, Chief Technical Officer (CTO), World Wide Importers.
 
@@ -481,7 +468,8 @@ The primary audience is the business decision makers and technology decision mak
 ## Preferred solution
 
 *High Level Architecture*
-1.	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+
+1. Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
     * The folllowing diagram illustrates the high level process for the "cold path" of the data pipeline architecture. It begins with ingesting the data from the Oracle, SAP Hana and Teradata sources. This can be done within Azure Synapse Analytics using a Pipeline and the Copy Data activity, which lands the data in Azure Data Lake gen 2. When performing initial exploration of the data in the data lake, the data can be readily explored using SQL Pools to explore it with T-SQL or using Spark Pools to explore it within notebooks. At this stage Data Flows can be created using the graphical designer to perform some data preparation tasks. Next, the data can be transformed and enriched in several ways. SQL Pools and SQL On-Demand can be used to apply transformations using T-SQL, as can notebooks running in Spark Pools. A pipeline is also commonly used at this stage to define a repeatable process for cleaning, joining, enriching and ultiumately loading the data into the serving SQL Pool. The serving layer can consist of dedicated SQL Pool instances to provide pre-provisioned compute capacity to server both data from the relational data warehouse or data sourced from the data lake. Additionally, the serving layer can use SQL On-Demand to provide ad-hoc compute capacity for querying data stored in the data lake. Either of these serving options can be used by Power BI reports created within Azure Synapse Analytics, or be external applications. The important take away from this architecture is that all of the components shown except Azure Data Lake Store gen 2 are managed within Azure Synapse Analytics.
     ![High level architecture](media/preferred-solution.png)
@@ -492,32 +480,48 @@ The primary audience is the business decision makers and technology decision mak
 
 *Ingest & Store*
 
-1.	For the solution you recommend, what specific approach would you say to WWI is the most performant for moving flat file data from the ingest storage locations to the data lake? 
-    * They should follow pattern of landing data in the data lake first, then ingest from the flat files into relational tables within the data warehouse. They can create pipeline in Azure Data Factory that extract the source data and store in Azure Data Lake Store gen 2 as Parquet files.
-2.	What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
-    * They should use Azure Data Lake Store gen 2 (Azure Storage with hiearchical file systems). 
-    * In ADLS, it is a best practice to have a dedicated Storage Account for production, and a separate Storage Account for dev and test workloads. This will ensure that dev or test workloads never interfere with production.  
-    * One common folder structure is to organize the data in separate folders by degree of refinement. For example a bronze folder contains the raw data, silver contains the cleaned, prepared and integrated data and gold contains data ready to support analytics, which might include final refinements such as pre-computed aggregates.
-3.	When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
-    * CSV, Parquet, ORC, JSON  
-4.	How will you ingest streaming data from the in-store IoT devices?
-    *   They should collect messages in Event Hub or IoT Hub and process them with Stream Analytics.
+1. For the solution you recommend, what specific approach would you say to WWI is the most efficient way for moving flat file data from the ingest storage locations to the data lake?
+
+   - They should follow the pattern of landing data in the data lake first, then ingest from the flat files into relational tables within the data warehouse. They can create pipelines in Azure Data Factory that extract the source data and store in Azure Data Lake Store gen 2 as Parquet files.
+
+2. What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
+
+    - They should use Azure Data Lake Store (ADLS) gen 2 (Azure Storage with hierarchical file systems).
+    - In ADLS, it is a best practice to have a dedicated Storage Account for production, and a separate Storage Account for dev and test workloads. This will ensure that dev or test workloads never interfere with production.  
+    - One common folder structure is to organize the data in separate folders by degree of refinement. For example a bronze folder contains the raw data, silver contains the cleaned, prepared and integrated data and gold contains data ready to support analytics, which might include final refinements such as pre-computed aggregates.
+
+3. When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
+
+    - CSV, Parquet, ORC, JSON  
+
+4. How will you ingest streaming data from the in-store IoT devices?
+
+    - They should collect messages in Event Hub or IoT Hub and process them with Stream Analytics.
 
 *Transform*
 
-1.	Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
-    *   Using Azure Synapse Analytics Studio, for any parquet files stored in ADLS, they can right click on a parquet file to query as SQL or as DataFrame in a notebook.
-2.	When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
-    *   Parquet. There is industry alignment around Parquet format for sharing (e.g., across Hadoop, Databricks, and SQL engine scenarios) data at the storage layer. Parquet is a perfomant, column oriented format optimized for big data scenarios. 
-3.	Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code? 
-    * The could use Mapping Data Flows that they graphically design in Azure Synapse Analytics Studio. These code-free data flows provide for scalable execution. Data Flows define a domain specific language for transformation and convert that into code that runs on Spark, which runs at scale and provides elasticity for handling growing volumes of data. 
-    * They can use code when their data engineers prefer to use Spark to transform the data via DataFrames. 
-4.	Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
-    *  Azure Synapse Analytics supports open source Apache Spark and the execution of Python, Scala and (in the near future) R code. Their data team would be able to use the familiar Jupyter notebooks and leverage their favorite libraries.
-5.	Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
-    *  Spark pools allow the importing of libraries during creation.
-    *  These dependencies are specified using a PIP freeze formatted text document listing the desired library names and versions.
-    *  The data team can then launch notebooks attached to the Spark pool and author the code that uses their favorite libraries.  
+1. Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
+
+    - Using Azure Synapse Analytics Studio, for any parquet files stored in ADLS, they can right click on a parquet file to query as SQL or as DataFrame in a notebook.
+
+2. When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
+
+    - Parquet. There is industry alignment around the Parquet format for sharing data at the storage layer (e.g., across Hadoop, Databricks, and SQL engine scenarios). Parquet is a high-performance, column oriented format optimized for big data scenarios.
+
+3. Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code?
+
+    - They could use Mapping Data Flows that they graphically design in Azure Synapse Analytics Studio. These code-free data flows provide for scalable execution. Data Flows define a domain specific language for transformation and convert that into code that runs on Spark, which runs at scale and provides elasticity for handling growing volumes of data.
+    - They can use code when their data engineers prefer to use Spark to transform the data via DataFrames.
+
+4. Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
+
+    - Azure Synapse Analytics supports open source Apache Spark and the execution of Python, Scala and (in the near future) R code. Their data team would be able to use the familiar Jupyter notebooks and leverage their favorite libraries.
+
+5. Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
+
+    - Spark pools allow the importing of libraries during creation.
+    - These dependencies are specified using a PIP freeze formatted text document listing the desired library names and versions.
+    - The data team can then launch notebooks attached to the Spark pool and author the code that uses their favorite libraries.  
 
 
 *Query*
