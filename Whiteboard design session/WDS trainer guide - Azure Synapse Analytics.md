@@ -258,9 +258,9 @@ Timeframe: 60 minutes
 
 Directions: With all participants at your table, answer the following questions and list the answers on a flip chart:
 
-1.  Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
+1. Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
 
-2.  What customer business needs do you need to address with your solution?
+2. What customer business needs do you need to address with your solution?
 
 **Design**
 
@@ -268,94 +268,89 @@ Directions: With all participants at your table, respond to the following questi
 
 *High Level Architecture*
 
-1.	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+1.Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
 *Ingest & Store*
 
-1.	For the solution you recommend, what specific approach would you say to WWI is the most performant for moving flat file data from the ingest storage locations to the data lake? 
+1. For the solution you recommend, what specific approach would you say to WWI is the most efficient for moving flat file data from the ingest storage locations to the data lake?
 
-2.	What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
+2. What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
 
-3.	When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
+3. When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
 
-4.	How will you ingest streaming data from the in-store IoT devices?
-
+4. How will you ingest streaming data from the in-store IoT devices?
 
 *Transform*
 
-1.	Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
+1. Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
 
-2.	When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
+2. When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
 
-3.	Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code? 
+3. Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code?
 
-4.	Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
+4. Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
 
-5.	Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
-
-
+5. Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
 
 *Query*
 
 Their sales transaction dataset exceeds a billion rows. For their downstream reporting queries, they need to be able to join, project and filter these rows in no longer than 10s of seconds. WWI is concerned their data is just too big to do this.
 
-1.	What specific indexing techniques should they use to reach this kind of performance for their fact tables? Why?
+1. What specific indexing techniques should they use to reach this kind of performance for their fact tables? Why?
 
-2.	Would you recommend the same approach for tables they have with less than 100 million rows?
+2. Would you recommend the same approach for tables they have with less than 100 million rows?
 
-3.	How should they configure indexes on their smaller lookup tables (e.g., those that contain store names and addresses)?
+3. How should they configure indexes on their smaller lookup tables (e.g., those that contain store names and addresses)?
 
-4.	What would you suggest for their larger lookup tables that are used just for point lookups that retrieve only a single row? How could they makes these more flexible so that queries filtering against different sets of columns would still yield performant lookups?
+4. What would you suggest for their larger lookup tables that are used just for point lookups that retrieve only a single row? How could they makes these more flexible so that queries filtering against different sets of columns would still yield efficient lookups?
 
-5.	What should they use for the fastest loading of staging tables?
+5. What should they use for the fastest loading of staging tables?
   
-6.	What are the typical issues they should look out for with regards to **distributed** table design for the following scenarios? 
-    * Their smallest fact table exceeds several GB’s and by their nature experiences frequent inserts. 
-      
-    *	As they develop the data warehouse, the WWI data team identified some tables created from the raw input that might be useful, but they don’t currently join to other tables and they are not sure of the best columns they should use for distributing the data. 
-       
-    *	 Their data engineers sometimes use temporary staging tables in their data preparation. 
+6. What are the typical issues they should look out for with regards to **distributed** table design for the following scenarios?
 
-7.	Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure? 
+    - Their smallest fact table exceeds several GB’s and by their nature experiences frequent inserts.
 
-8.	What approach can they use to update the JSON data?
+    - As they develop the data warehouse, the WWI data team identified some tables created from the raw input that might be useful, but they don’t currently join to other tables and they are not sure of the best columns they should use for distributing the data.
 
-9.	In some of their queries, they are OK trading off speed of returning counts for a small reduction in accuracy. How might they do this?
+    - Their data engineers sometimes use temporary staging tables in their data preparation.
 
-10.	Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
+7. Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure?
 
+8. What approach can they use to update the JSON data?
 
+9. In some of their queries, they are OK trading off speed of returning counts for a small reduction in accuracy. How might they do this?
+
+10. Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
 
 *Visualize*
 
-1.	What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install? 
+1. What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install?
 
-2.	Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
+2. Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
 
-3.	With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
-
+3. With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
 
 *Manage*
 
-1.	In previous efforts, WWI systems struggled with their popularity. Exploratory queries that were not time sensitive would saturate the available resources and delay the execution of higher priority queries supporting critical reports. Explain how your solution helps to resolve this. 
+1. In previous efforts, WWI systems struggled with their own popularity. Exploratory queries that were not time sensitive would saturate the available resources and delay the execution of higher priority queries supporting critical reports. Explain how your solution helps to resolve this.
 
-2.	What does your solution provide to WWI to help them identify issues such as suboptimal table distribution, data skew, cache misses, tempdb contention and suboptimal plan selection?
+2. What does your solution provide to WWI to help them identify issues such as suboptimal table distribution, data skew, cache misses, `tempdb` contention and suboptimal plan selection?
 
-3.	WWI recognizes there is a balance between the data warehouse software staying up to date and when they can afford downtime that might result. How can they establish their preferences with your solution so they are never caught off guard with an upgrade?
+3. WWI recognizes there is a balance between the data warehouse software staying up to date and when they can afford downtime that might result. How can they establish their preferences with your solution so they are never caught off guard with an upgrade?
 
 *Secure*
 
-1.	How does your solution provide unified authentication, such as across SQL and Spark workloads? 
+1. How does your solution provide unified authentication, such as across SQL and Spark workloads?
 
-2.	How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
+2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
 
-3.	One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options. 
+3. One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options.
 
-4.	Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
+4. Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
 
-5.	Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
- 
-6.	From a network security standpoint, how should your solution be secured?
+5. Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
+
+6. From a network security standpoint, how should your solution be secured?
 
 
 **Prepare**
