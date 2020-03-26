@@ -656,63 +656,69 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
 
-    * **Authorization in ADLS gen2:** From an authorization standpoint, course grained access control can be applied at the container level in Azure Storage by specifying AAD roles. Furthermore, fine grained access control is enabled by setting POSIX ACL's at the folder level.
-    * **Authorization in databases:** Management of database permissions is performed by setting access permissions on Azure Active Directory groups and users, which are external to the database. Object level security allows you to contol permissions on tables, views, stored procedures and functions.
+   - **Authorization in ADLS gen2:** From an authorization standpoint, course grained access control can be applied at the container level in Azure Storage by specifying AAD roles. Furthermore, fine grained access control is enabled by setting POSIX ACLs at the folder level.
+   - **Authorization in databases:** Management of database permissions is performed by setting access permissions on Azure Active Directory groups and users, which are external to the database. Object level security allows you to contol permissions on tables, views, stored procedures and functions.
 
-3.	One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options. 
+3. One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options.
 
-    * WWI could achieve this in several ways using either Row Level Security, Column Level Security or Dynamic Data Masking. They might even benefit from all three being applied to the same table depending on their needs.
-    * **Row Level Security:** In Azure Synapse Analytics, tables in SQL Pool databases support Row Level Security (RLS). RLS enables you to implement restrictions on data row access.The access restriction logic is located in the database tier rather than away from the data in another application tier. The database system applies the access restrictions every time that data access is attempted from any tier. Think of RLS as effectively filtering out rows the user is not authorized to select, update or delete. This makes your security system more reliable and robust by reducing the surface area of your security system.
-    * **Columns Level Security:** In addition, tables in SQL Pool databases support Column Level Security (CLS). CLS enables you to control access to specific columns in a database table based on a user's group membership or execution context.
-    * **Dynamic Data Masking:** Alternately, if parts only parts of a field need to be displayed according to the users's group membership (such as displaying only a few characters of an email address), then WWI could use Dynamic Data Masking.
+   - WWI could achieve this in several ways using either Row Level Security, Column Level Security or Dynamic Data Masking. They might even benefit from all three being applied to the same table depending on their needs.
+   - **Row Level Security:** In Azure Synapse Analytics, tables in SQL Pool databases support Row Level Security (RLS). RLS enables you to implement restrictions on data row access.The access restriction logic is located in the database tier rather than away from the data in another application tier. The database system applies the access restrictions every time that data access is attempted from any tier. Think of RLS as effectively filtering out rows the user is not authorized to select, update or delete. This makes your security system more reliable and robust by reducing the surface area of your security system.
+   - **Columns Level Security:** In addition, tables in SQL Pool databases support Column Level Security (CLS). CLS enables you to control access to specific columns in a database table based on a user's group membership or execution context.
+   - **Dynamic Data Masking:** Alternately, if parts only parts of a field need to be displayed according to the users's group membership (such as displaying only a few characters of an email address), then WWI could use Dynamic Data Masking.
 
+4. Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
 
-4.	Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
-      * There are two primary ways: using the SQL Vulnerability Assessment and with SQL Threat Detection.
-      * The SQL Vulnerability Assessment is an easy to use service that can help you discover, track, and remediate potential database vulnerabilities. It provides visibility into your database security state and allows constant improvements. In short, it:
-        * Runs a set of security checks that identify security misconfigurations. 
-        * Allows setting a security baseline that customize the results to suit your environment.
-        * Provides a clear report which is very helpful for security audits.
-      * The SQL Vulnerability Assessment is run from the Azure Portal. It takes a few seconds to run, and is entirely read-only. It does not make any changes to your database. 
-      * When the scan completes, you will presented with a report. The report presents an overview of your security state; how many issues were found, and their respective severities. Results include warnings on deviations from best practices, as well as a snapshot of your security-related settings, such as database principals and roles and their associated permissions. The scan report also provides a map of sensitive data discovered in your database, and includes recommendations of the built-in methods available to protect it.
-      * From the report you can drill-down to each failed result to understand the impact of the finding, and why each security check failed. You can use the actionable remediation information provided by the report to resolve the issue, for example, by running a generated remediation script in a new query editor window.
-      * As you review your assessment results, you can mark specific results as being an acceptable Baseline in your environment. The baseline is essentially a customization of how the results are reported. Results that match the baseline are considered as passing in subsequent scans.
-      * SQL Threat Detection allows you to respond to unusual and harmful attempts to breach your database, including detecting potential SQL injection attacks, unusual access and data exfiltration activities and emailing actionable alerts to investigate and remediate. It is configured in the Azure Portal. 
+   - There are two primary ways: using the SQL Vulnerability Assessment and with SQL Threat Detection.
+   - The SQL Vulnerability Assessment is an easy to use service that can help you discover, track, and remediate potential database vulnerabilities. It provides visibility into your database security state and allows constant improvements. In short, it:
+     - Runs a set of security checks that identify security misconfigurations.
+     - Allows setting a security baseline that customize the results to suit your environment.
+     - Provides a clear report which is very helpful for security audits.
+   - The SQL Vulnerability Assessment is run from the Azure Portal. It takes a few seconds to run, and is entirely read-only. It does not make any changes to your database.
+   - When the scan completes, you will presented with a report. The report presents an overview of your security state; how many issues were found, and their respective severities. Results include warnings on deviations from best practices, as well as a snapshot of your security-related settings, such as database principals and roles and their associated permissions. The scan report also provides a map of sensitive data discovered in your database, and includes recommendations of the built-in methods available to protect it.
+   - From the report you can drill-down to each failed result to understand the impact of the finding, and why each security check failed. You can use the actionable remediation information provided by the report to resolve the issue, for example, by running a generated remediation script in a new query editor window.
+   - As you review your assessment results, you can mark specific results as being an acceptable Baseline in your environment. The baseline is essentially a customization of how the results are reported. Results that match the baseline are considered as passing in subsequent scans.
+   - SQL Threat Detection allows you to respond to unusual and harmful attempts to breach your database, including detecting potential SQL injection attacks, unusual access and data exfiltration activities and emailing actionable alerts to investigate and remediate. It is configured in the Azure Portal.
 
-5.	Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
-    * Yes, by using SQL Data Discovery and Classification, which:
-      * Automatically discovers columns containing potentially sensitive data.
-      * Provides a simple way to review and apply the classification recommendations through the Azure portal.
-      * Persists sensitive data labels in the database (as metadata attributes), audits and detects access to the sensitive data. It includes a built-in set of labels and information types, however users can chose to define custom labels across Azure tenant using Azure Security Center.
-    * This feature is accessed using the Azure Portal. 
- 
-6.	From a network security standpoint, how should your solution be secured?
-    * WWI should deploy their Azure Synapse Analytics workspace within a managed workspace Virtual Vetwork (VNet), and then use managed private endpoints to establish a private link to Azure resources. By using a private link, traffic between their VNet and Azure Synapse Analytics workspace traverses entirely over the Microsoft backbone network, which protects against data exfiltration risks. You establish a private link to a resource by creating a private endpoint. Private endpoint uses a private IP address from the VNet to effectively bring the service "into" the VNet. Azure Synapse Analytics creates two Managed private endpoints automatically when the Azure Synapse workspace is created within a managed VNet.
+5. Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
 
+   - Yes, by using SQL Data Discovery and Classification, which:
+     - Automatically discovers columns containing potentially sensitive data.
+     - Provides a simple way to review and apply the classification recommendations through the Azure portal.
+     - Persists sensitive data labels in the database (as metadata attributes), audits and detects access to the sensitive data. It includes a built-in set of labels and information types, however users can chose to define custom labels across Azure tenant using Azure Security Center.
+   - This feature is accessed using the Azure Portal.
+
+6. From a network security standpoint, how should your solution be secured?
+
+   - WWI should deploy their Azure Synapse Analytics workspace within a managed workspace Virtual Network (VNet), and then use managed private endpoints to establish a private link to Azure resources. By using a private link, traffic between their VNet and Azure Synapse Analytics workspace traverses entirely over the Microsoft backbone network, which protects against data exfiltration risks. You establish a private link to a resource by creating a private endpoint. Private endpoint uses a private IP address from the VNet to effectively bring the service "into" the VNet. Azure Synapse Analytics creates two Managed private endpoints automatically when the Azure Synapse workspace is created within a managed VNet.
 
 ## Checklist of preferred objection handling
 
-1.  WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution. 
-    * Azure Synapse Analytics was designed to address exactly this situation and enables customers to quickly get to creating business value from their analytics instead of spending time on plumbing infrastructure connecting disparate services.
+1. WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution.
 
-2.  The have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
-    * Azure Synapse Analytics is Microsoft's answer to this challenge, and is designed for supporting fast loads of massive datasets. 
+   - Azure Synapse Analytics was designed to address exactly this situation and enables customers to quickly get to creating business value from their analytics instead of spending time on plumbing infrastructure connecting disparate services.
 
-3.  Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
-    * Yes, Azure Synapse Analytics provides an integrated environment that does exactly this. 
+2. They have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
 
-4.  They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
-    * Azure Synapse Analytics support serverless querying via SQL on-demand. 
-    * SQL On-Demand is an interactive query service that provides T-SQL queries over high scale data in Azure Storage.
-    * Supports data in various formats (Parquet, CSV, JSON)
-    * It would be appropriate for dashboards and reports, as it supports Power BI and can be used refresh dashboard datasets. It is also appropriate for basic data discovery and exploration and supporting "single query ETL" that  transforms Azure Storage based data in a massively parallel fashion.
+   - Azure Synapse Analytics is Microsoft's answer to this challenge, and is designed for supporting fast loads of massive datasets.
 
-5.  If their solution provide serverless querying, are they prevented from using pre-allocated query resources?             
-    * No. This is a unique differenatiator of Azure Synapse Analytics. Within one Azure Synapse Analytics workspace, they can have preprovisioned SQL Pools, and also have SQL on-demand serverless querying.
+3. Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
 
-6.  Is my data protected at rest and do I have control over the keys used to encrypt it?
-    * For data stored in SQL Pool databases as well as data stored in Azure Storage (including Azure Data Lake Store gen 2), Azure Synapse Analytics supports transparent data encryption (TDE), which means all data is encrypted when written to disk and decrypted when read. When it comes to the keys used for encryption and decryption, TDE provides the option of using service managed keys that are supplied by Microsoft, or user managed keys that are provided by the customer and are stored securely in Azure Key Vault. 
+   - Yes, Azure Synapse Analytics provides an integrated environment that does exactly this.
 
+4. They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
+
+   - Azure Synapse Analytics support serverless querying via SQL on-demand.
+   - SQL On-Demand is an interactive query service that provides T-SQL queries over high scale data in Azure Storage.
+   - Supports data in various formats (Parquet, CSV, JSON)
+   - It would be appropriate for dashboards and reports, as it supports Power BI and can be used refresh dashboard datasets. It is also appropriate for basic data discovery and exploration and supporting "single query ETL" that  transforms Azure Storage based data in a massively parallel fashion.
+
+5. If their solution provides serverless querying, are they prevented from using pre-allocated query resources?
+
+   - No. This is a unique differentiator of Azure Synapse Analytics. Within one Azure Synapse Analytics workspace, they can have pre-provisioned SQL Pools, and also have SQL on-demand serverless querying.
+
+6. Is my data protected at rest and do I have control over the keys used to encrypt it?
+
+   - For data stored in SQL Pool databases as well as data stored in Azure Storage (including Azure Data Lake Store gen 2), Azure Synapse Analytics supports transparent data encryption (TDE), which means all data is encrypted when written to disk and decrypted when read. When it comes to the keys used for encryption and decryption, TDE provides the option of using service managed keys that are supplied by Microsoft, or user managed keys that are provided by the customer and are stored securely in Azure Key Vault.
 
 ## Customer quote (to be read back to the attendees at the end)
 
