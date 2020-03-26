@@ -352,16 +352,15 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 6. From a network security standpoint, how should your solution be secured?
 
-
 **Prepare**
 
 Directions: With all participants at your table:
 
-1.  Identify any customer needs that are not addressed with the proposed solution.
+1. Identify any customer needs that are not addressed with the proposed solution.
 
-2.  Identify the benefits of your solution.
+2. Identify the benefits of your solution.
 
-3.  Determine how you will respond to the customer's objections.
+3. Determine how you will respond to the customer's objections.
 
 Prepare a 15-minute chalk-talk style presentation to the customer.
 
@@ -377,27 +376,27 @@ Timeframe: 30 minutes
 
 Directions:
 
-1.  Pair with another table.
+1. Pair with another table.
 
-2.  One table is the Microsoft team and the other table is the customer.
+2. One table is the Microsoft team and the other table is the customer.
 
-3.  The Microsoft team presents their proposed solution to the customer.
+3. The Microsoft team presents their proposed solution to the customer.
 
-4.  The customer makes one of the objections from the list of objections.
+4. The customer makes one of the objections from the list of objections.
 
-5.  The Microsoft team responds to the objection.
+5. The Microsoft team responds to the objection.
 
-6.  The customer team gives feedback to the Microsoft team.
+6. The customer team gives feedback to the Microsoft team.
 
-7.  Tables switch roles and repeat Steps 2-6.
+7. Tables switch roles and repeat Steps 2-6.
 
-##  Wrap-up 
+## Wrap-up
 
 Timeframe: 15 minutes
 
 Directions: Tables reconvene with the larger group to hear the facilitator/SME share the preferred solution for the case study.
 
-##  Additional references
+## Additional references
 
 |    |            |
 |----------|:-------------:|
@@ -422,45 +421,45 @@ Directions: Tables reconvene with the larger group to hear the facilitator/SME s
 
 ## Step 1: Review the customer case study
 
--   Check in with your table participants to introduce yourself as the trainer.
+- Check in with your table participants to introduce yourself as the trainer.
 
--   Ask, "What questions do you have about the customer case study?"
+- Ask, "What questions do you have about the customer case study?"
 
--   Briefly review the steps and timeframes of the whiteboard design session.
+- Briefly review the steps and timeframes of the whiteboard design session.
 
--   Ready, set, go! Let the table participants begin.
+- Ready, set, go! Let the table participants begin.
 
 ## Step 2: Design a proof of concept solution
 
--   Check in with your tables to ensure that they are transitioning from step to step on time.
+- Check in with your tables to ensure that they are transitioning from step to step on time.
 
--   Provide some feedback on their responses to the business needs and design.
+- Provide some feedback on their responses to the business needs and design.
 
-    -   Try asking questions first that will lead the participants to discover the answers on their own.
+  - Try asking questions first that will lead the participants to discover the answers on their own.
 
--   Provide feedback for their responses to the customer's objections.
+- Provide feedback for their responses to the customer's objections.
 
-    -   Try asking questions first that will lead the participants to discover the answers on their own.
+  - Try asking questions first that will lead the participants to discover the answers on their own.
 
 ## Step 3: Present the solution
 
--   Determine which table will be paired with your table before Step 3 begins.
+- Determine which table will be paired with your table before Step 3 begins.
 
--   For the first round, assign one table as the presenting team and the other table as the customer.
+- For the first round, assign one table as the presenting team and the other table as the customer.
 
--   Have the presenting team present their solution to the customer team.
+- Have the presenting team present their solution to the customer team.
 
-    -   Have the customer team provide one objection for the presenting team to respond to.
+  - Have the customer team provide one objection for the presenting team to respond to.
 
-    -   The presentation, objections, and feedback should take no longer than 15 minutes.
+  - The presentation, objections, and feedback should take no longer than 15 minutes.
 
-    -   If needed, the trainer may also provide feedback.
+  - If needed, the trainer may also provide feedback.
 
 ## Wrap-up
 
--   Have the table participants reconvene with the larger session group to hear the facilitator/SME share the following preferred solution.
+- Have the table participants reconvene with the larger session group to hear the facilitator/SME share the following preferred solution.
 
-##  Preferred target audience
+## Preferred target audience
 
 Peter Guerin, Chief Technical Officer (CTO), World Wide Importers.
 
@@ -469,38 +468,55 @@ The primary audience is the business decision makers and technology decision mak
 ## Preferred solution
 
 *High Level Architecture*
-1.	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+
+1. Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
     ![High level architecture](media/preferred-solution.png)
 
 *Ingest & Store*
 
-1.	For the solution you recommend, what specific approach would you say to WWI is the most performant for moving flat file data from the ingest storage locations to the data lake? 
-    * They should follow pattern of landing data in the data lake first, then ingest from the flat files into relational tables within the data warehouse. They can create pipeline in Azure Data Factory that extract the source data and store in Azure Data Lake Store gen 2 as Parquet files.
-2.	What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
-    * They should use Azure Data Lake Store gen 2 (Azure Storage with hiearchical file systems). 
-    * In ADLS, it is a best practice to have a dedicated Storage Account for production, and a separate Storage Account for dev and test workloads. This will ensure that dev or test workloads never interfere with production.  
-    * One common folder structure is to organize the data in separate folders by degree of refinement. For example a bronze folder contains the raw data, silver contains the cleaned, prepared and integrated data and gold contains data ready to support analytics, which might include final refinements such as pre-computed aggregates.
-3.	When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
-    * CSV, Parquet, ORC, JSON  
-4.	How will you ingest streaming data from the in-store IoT devices?
-    *   They should collect messages in Event Hub or IoT Hub and process them with Stream Analytics.
+1. For the solution you recommend, what specific approach would you say to WWI is the most efficient way for moving flat file data from the ingest storage locations to the data lake?
+
+   - They should follow the pattern of landing data in the data lake first, then ingest from the flat files into relational tables within the data warehouse. They can create pipelines in Azure Data Factory that extract the source data and store in Azure Data Lake Store gen 2 as Parquet files.
+
+2. What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
+
+    - They should use Azure Data Lake Store (ADLS) gen 2 (Azure Storage with hierarchical file systems).
+    - In ADLS, it is a best practice to have a dedicated Storage Account for production, and a separate Storage Account for dev and test workloads. This will ensure that dev or test workloads never interfere with production.  
+    - One common folder structure is to organize the data in separate folders by degree of refinement. For example a bronze folder contains the raw data, silver contains the cleaned, prepared and integrated data and gold contains data ready to support analytics, which might include final refinements such as pre-computed aggregates.
+
+3. When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
+
+    - CSV, Parquet, ORC, JSON  
+
+4. How will you ingest streaming data from the in-store IoT devices?
+
+    - They should collect messages in Event Hub or IoT Hub and process them with Stream Analytics.
 
 *Transform*
 
-1.	Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
-    *   Using Azure Synapse Analytics Studio, for any parquet files stored in ADLS, they can right click on a parquet file to query as SQL or as DataFrame in a notebook.
-2.	When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
-    *   Parquet. There is industry alignment around Parquet format for sharing (e.g., across Hadoop, Databricks, and SQL engine scenarios) data at the storage layer. Parquet is a perfomant, column oriented format optimized for big data scenarios. 
-3.	Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code? 
-    * The could use Mapping Data Flows that they graphically design in Azure Synapse Analytics Studio. These code-free data flows provide for scalable execution. Data Flows define a domain specific language for transformation and convert that into code that runs on Spark, which runs at scale and provides elasticity for handling growing volumes of data. 
-    * They can use code when their data engineers prefer to use Spark to transform the data via DataFrames. 
-4.	Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
-    *  Azure Synapse Analytics supports open source Apache Spark and the execution of Python, Scala and (in the near future) R code. Their data team would be able to use the familiar Jupyter notebooks and leverage their favorite libraries.
-5.	Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
-    *  Spark pools allow the importing of libraries during creation.
-    *  These dependencies are specified using a PIP freeze formatted text document listing the desired library names and versions.
-    *  The data team can then launch notebooks attached to the Spark pool and author the code that uses their favorite libraries.  
+1. Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
+
+    - Using Azure Synapse Analytics Studio, for any parquet files stored in ADLS, they can right click on a parquet file to query as SQL or as DataFrame in a notebook.
+
+2. When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
+
+    - Parquet. There is industry alignment around the Parquet format for sharing data at the storage layer (e.g., across Hadoop, Databricks, and SQL engine scenarios). Parquet is a high-performance, column oriented format optimized for big data scenarios.
+
+3. Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code?
+
+    - They could use Mapping Data Flows that they graphically design in Azure Synapse Analytics Studio. These code-free data flows provide for scalable execution. Data Flows define a domain specific language for transformation and convert that into code that runs on Spark, which runs at scale and provides elasticity for handling growing volumes of data.
+    - They can use code when their data engineers prefer to use Spark to transform the data via DataFrames.
+
+4. Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
+
+    - Azure Synapse Analytics supports open source Apache Spark and the execution of Python, Scala and (in the near future) R code. Their data team would be able to use the familiar Jupyter notebooks and leverage their favorite libraries.
+
+5. Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
+
+    - Spark pools allow the importing of libraries during creation.
+    - These dependencies are specified using a PIP freeze formatted text document listing the desired library names and versions.
+    - The data team can then launch notebooks attached to the Spark pool and author the code that uses their favorite libraries.  
 
 
 *Query*
