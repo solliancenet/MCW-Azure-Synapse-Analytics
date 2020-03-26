@@ -198,9 +198,9 @@ They understand that using analytics on top of retail data has the potential to 
 
 They would like to combine their retail lifecycle data including customer data, operations data, sourcing and supplier data as well as transaction data with analytics to reduce churn, enhance loyalty, advance customer journeys, enable the ability to conduct contextual marketing, measure attribution and provide insights across their enterprise to holistically drive growth across the organization.
 
-They are looking to use historical campaign and customer analytics data and make decisions for the present. Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI sees an opportunity to use their data to predict the future, intially by making product recommendations.
+They are looking to use historical campaign and customer analytics data and make decisions for the present. Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI sees an opportunity to use their data to predict the future, initially by making product recommendations.
 
-According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 30  billion rows. But that is not their only enteprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
+According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 30  billion rows. But that is not their only enterprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
 
 In addition to those data sources, they have in-store IoT sensors producing telemetry data that tracks the traffic patterns of customers walking the aisles. Each store has 50 sensors, and they have 100 stores equipped to provide this real-time data. Using this data they want to understand in which departments (or groups of aisles) people are spending most of their time, and which of those they are not. They would like a solution to ensure that this data gets ingested and processed in near real time, allowing them to quickly identify patterns that can be shared between stores. For example, as stores open on the East Coast, patterns detected in early buying behavior could inform last minute offers and in store product placement of products in their West Coast stores that have yet to open.
 
@@ -210,43 +210,37 @@ Peter also mentioned that, in his experience, a point of frustration with the to
 
 To bring their entire operation into perspective, Wide World Importers would like to create a dashboard where they can see their KPI's derived from historical data, real-time twitter sentiment and IoT sensor data, and key product recommendations generated using machine learning.
 
+### Customer needs
 
-### Customer needs 
+1. Gain business insights using a combination of historical, real-time, and predictive analytics.
 
-1.  Gain business insights using a combination of historical, real-time, and predictive analytics. 
+2. Have a unified approach to handling their structured and unstructured data sources.
 
-2.  Have a unified approach to handling their structured and unstructured data sources.
+3. Enable their team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data.
 
-3.  Enable their team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data.
+4. Enable business analysts and data science/data engineering teams to share a single source of truth.
 
-4.  Enable business analysts and data science/data engineering teams to share a single source of truth. 
+5. They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
 
-5.  They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
+6. Prefer to accomplish this working withing a single collaborative environment.
 
-6.  Prefer to accomplish this working withing a single collaborative environment.
+7. They have concerns about performance, and want to make sure they can understand the core approaches they should take to ensure the best performance of the solution recommended.
 
-7.  They have concerns about performance, and want to make sure they can understand the core approaches they should take to ensure the best performance of the solution recommended.
+8. Need a solution that provides a consistent security model across all components.
 
-8.  Need a solution that provides a consistent security model across all components.
+### Customer objections
 
+1. WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution.
 
-### Customer objections 
+2. They have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
 
-1.  WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution. 
+3. Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
 
-2.  The have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
+4. They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
 
-3.  Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
+5. If their solution provide serverless querying, are they prevented from using pre-allocated query resources?
 
-4.  They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
-
-5.  If their solution provide serverless querying, are they prevented from using pre-allocated query resources? 
-
-6.  Is my data protected at rest and do I have control over the keys used to encrypt it?
-
-
-
-
+6. Is my data protected at rest and do I have control over the keys used to encrypt it?
 
 ### Infographic for common scenarios
 
