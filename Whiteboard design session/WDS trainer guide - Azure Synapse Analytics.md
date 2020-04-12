@@ -342,7 +342,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 1. How does your solution provide unified authentication, such as across SQL and Spark workloads?
 
-2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
+2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In Azure Synapse SQL databases?
 
 3. One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options.
 
@@ -471,11 +471,16 @@ The primary audience is the business decision makers and technology decision mak
 
 1. Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
-    * The folllowing diagram illustrates the high level process for the "cold path" of the data pipeline architecture. It begins with ingesting the data from the Oracle, SAP Hana and Teradata sources. This can be done within Azure Synapse Analytics using a Pipeline and the Copy Data activity, which lands the data in Azure Data Lake gen 2. When performing initial exploration of the data in the data lake, the data can be readily explored using SQL Pools to explore it with T-SQL or using Spark Pools to explore it within notebooks. At this stage Data Flows can be created using the graphical designer to perform some data preparation tasks. Next, the data can be transformed and enriched in several ways. SQL Pools and SQL On-Demand can be used to apply transformations using T-SQL, as can notebooks running in Spark Pools. A pipeline is also commonly used at this stage to define a repeatable process for cleaning, joining, enriching and ultiumately loading the data into the serving SQL Pool. The serving layer can consist of dedicated SQL Pool instances to provide pre-provisioned compute capacity to server both data from the relational data warehouse or data sourced from the data lake. Additionally, the serving layer can use SQL On-Demand to provide ad-hoc compute capacity for querying data stored in the data lake. Either of these serving options can be used by Power BI reports created within Azure Synapse Analytics, or be external applications. The important take away from this architecture is that all of the components shown except Azure Data Lake Store gen 2 are managed within Azure Synapse Analytics.
+    * The folllowing diagram illustrates the high level process for the "cold path" of the data pipeline architecture. It begins with ingesting the data from the Oracle, SAP Hana and Teradata sources. This can be done within Azure Synapse Analytics using a Azure Synapse Pipelines containing the Copy Data activity, which lands the data in Azure Data Lake gen 2. When performing initial exploration of the data in the data lake, the data can be readily explored using Azure Synapse SQL to explore it with T-SQL or using Azure Synapse Spark to explore it within notebooks. 
+    * At this stage Data Flows, which are Pipeline activities just like the Copy Data activity, can be created using the graphical designer to perform some data preparation tasks. 
+    * Next, the data can be transformed and enriched in several ways. 
+    * Azure Synapse SQL offers both serverless and provisioned resource models, offering consumption and billing options to fit the customer's needs. For predictable performance and cost, provision pools to reserve processing power for data stored in SQL tables. For ad hoc or bursty workloads, use the serverless, always-available SQL endpoint. 
+    * Azure Synapse SQL provisioned pools and the Azure Synapse SQL serverless endpoint can be used to apply transformations using T-SQL, as can notebooks running in Azure Synapse Spark. A Pipeline is also commonly used at this stage to define a repeatable process for cleaning, joining, enriching and ultimately loading the data into the Azure Synapse SQL that functions as the serving database. 
+    * The serving layer can consist of dedicated Azure Synapse SQL provisioned instances to provide pre-provisioned compute capacity to serve both data from the relational data warehouse or data sourced from the data lake. Additionally, the serving layer can use Azure Synapse SQL serverless to provide ad-hoc compute capacity for querying data stored in the data lake. Either of these serving options can be used by Power BI reports created within Azure Synapse Analytics, or by external applications. The important take away from this architecture is that all of the components shown are completely managed within Azure Synapse Analytics.
     ![High level architecture](media/preferred-solution.png)
-    * The following diagram illustrates how they could handle the streaming data, the "hot path". Twitter tweet data needs to be pulled using a WebJob. This WebJob would load the tweets into Event Hubs so that they could be processed reliably using Stream Analytics. Stream Analytics can be used both to archive all tweets to the data lake for offline or batch analysis using SQL On-Demand within Azure Synapse Analytics, as well as to send live data to Power BI reports for real-time dashboards and reports. The in-store IoT sensors could ingest their data into IoT Hub directly, and by integrating with IoT Hub also benefit from the device management capabilities that IoT Hub enables. Ultimately this data would also be processed by another Stream Analytics job and served in the same was as the tweets.
+    * The following diagram illustrates how they could handle the streaming data, the "hot path". Twitter tweet data needs to be pulled using a WebJob. This WebJob would load the tweets into Event Hubs so that they could be processed reliably using Stream Analytics. Stream Analytics can be used both to archive all tweets to the data lake for offline or batch analysis using Azure Synapse SQL provisioned within Azure Synapse Analytics, as well as to send live data to Power BI reports for real-time dashboards and reports. The in-store IoT sensors could ingest their data into IoT Hub directly, and by integrating with IoT Hub also benefit from the device management capabilities that IoT Hub enables. Ultimately this data would also be processed by another Stream Analytics job and served in the same was as the tweets.
     ![High level architecture](media/preferred-solution-streaming.png)
-    * The following diagram illustrates the approach the Azure Synapse Analytics enables for WWI with regards to machine learning. WWI could train their machine learning models within Spark notebooks running on a Spark Pool. They could use their machine learning framework of choice to do so. Within this notebook they would convert the model into the ONNX format and the upload the model to Azure Storage. From there, they would run a T-SQL script on a SQL Pool to load the model into a table in the database. After this, they can use the model within T-SQL scripts running on a SQL Pool by loading the model from the table, and using it with the Predict statement to score data sourced from a table in the database. The scored results could then be used directly or be inserted into a target table for later querying of the predictions.
+    * The following diagram illustrates the approach the Azure Synapse Analytics enables for WWI with regards to machine learning. WWI could train their machine learning models within Azure Synapse Spark notebooks. They could use their machine learning framework of choice to do so. Within this notebook they would convert the model into the ONNX format and then upload the model to Azure Storage. From there, they would run a T-SQL script in Azure Synapse SQL to load the model into a table in the database. After this, they can use the model within T-SQL scripts running Azure Synapse SQL by loading the model from the table, and using it with the Predict function to score data sourced from a table in the database. The scored results could then be used directly or be inserted into a target table for later querying of the predictions.
     ![High level architecture](media/preferred-solution-machine-learning.png)
 
 *Ingest & Store*
@@ -502,7 +507,7 @@ The primary audience is the business decision makers and technology decision mak
 
 1. Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
 
-    - Using Azure Synapse Analytics Studio, for any parquet files stored in ADLS, they can right click on a parquet file to query as SQL or as DataFrame in a notebook.
+    - Using Azure Synapse Studio, for any parquet files stored in ADLS, they can right click on a parquet file to query as SQL or as DataFrame in a notebook.
 
 2. When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
 
@@ -510,7 +515,7 @@ The primary audience is the business decision makers and technology decision mak
 
 3. Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code?
 
-    - They could use Mapping Data Flows that they graphically design in Azure Synapse Analytics Studio. These code-free data flows provide for scalable execution. Data Flows define a domain specific language for transformation and convert that into code that runs on Spark, which runs at scale and provides elasticity for handling growing volumes of data.
+    - They could use Mapping Data Flows that they graphically design in Azure Synapse Studio. These code-free data flows provide for scalable execution. Data Flows define a domain specific language for transformation and convert that into code that runs on Spark, which runs at scale and provides elasticity for handling growing volumes of data.
     - They can use code when their data engineers prefer to use Spark to transform the data via DataFrames.
 
 4. Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
@@ -519,9 +524,9 @@ The primary audience is the business decision makers and technology decision mak
 
 5. Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
 
-    - Spark pools allow the importing of libraries during creation.
+    - Azure Synapse Spark pools allow the importing of libraries during creation.
     - These dependencies are specified using a PIP freeze formatted text document listing the desired library names and versions.
-    - The data team can then launch notebooks attached to the Spark pool and author the code that uses their favorite libraries.  
+    - The data team can then launch notebooks attached to the Azure Synapse Spark pool and author the code that uses their favorite libraries.  
 
 *Query*
 
@@ -594,7 +599,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 7. Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure?
 
-   - The can use SQL on-demand along with the T-SQL OPENJSON, JSON_VALUE, and JSON_QUERY statements.
+   - They can use Azure Synapse SQL serverless along with the T-SQL OPENJSON, JSON_VALUE, and JSON_QUERY statements.
 
 8. What approach can they use to update the JSON data?
 
@@ -607,8 +612,8 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 10. Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
 
     - They should consider result-set caching.
-    - Cache the results of a query in SQL pool storage. This enables interactive response times for repetitive queries against tables with infrequent data changes.
-    - The result-set cache persists even if SQL pool is paused and resumed later.
+    - Cache the results of a query in provisioned Azure Synapse SQL storage. This enables interactive response times for repetitive queries against tables with infrequent data changes.
+    - The result-set cache persists even if the provisioned Azure Synapse SQL is paused and resumed later.
     - Query cache is invalidated and refreshed when underlying table data or query code changes.
     - Result cache is evicted regularly based on a time-aware least recently used algorithm (TLRU).
 
@@ -624,7 +629,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 3. With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
 
-   - No, they only need to load the data into Azure Storage. Using SQL On-demand and Power BI they can create reports against the data directly.
+   - No, they only need to load the data into Azure Storage. Using Azure Synapse SQL serverless and Power BI they can create reports against the data directly.
 
 *Manage*
 
@@ -652,9 +657,9 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 1. How does your solution provide unified authentication, such as across SQL and Spark workloads?
 
-   - Azure Synapse Analytics uses Azure Active Directory (AAD) as its authentication mechanism. When a user logs into an Azure Synapse Analytics workspace, the active user's AAD credential is implicitly used to execute T-SQL queries on a SQL Pool, to run notebooks in a Spark Pool and to access Power BI reports. This same AAD credential is also utilized in controlling access to the data stored within SQL Pool Databases or stored within a hierarchical file system in Azure Storage (Azure Data Lake Store gen 2 or ADLS gen 2). By leveraging AAD, Azure Synapse Analytics allows for the centralized management of user identities.
+   - Azure Synapse Analytics uses Azure Active Directory (AAD) as its authentication mechanism. When a user logs into an Azure Synapse Analytics workspace, the active user's AAD credential is implicitly used to execute T-SQL queries on a provisioned Azure Synapse SQL pool, to run notebooks in an Azure Synapse Spark pool and to access Power BI reports. This same AAD credential is also utilized in controlling access to the data stored within Azure Synapse SQL databases or stored within a hierarchical file system in Azure Storage (Azure Data Lake Store gen 2 or ADLS gen 2). By leveraging AAD, Azure Synapse Analytics allows for the centralized management of user identities.
 
-2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
+2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In Azure Synapse SQL databases?
 
    - **Authorization in ADLS gen2:** From an authorization standpoint, course grained access control can be applied at the container level in Azure Storage by specifying AAD roles. Furthermore, fine grained access control is enabled by setting POSIX ACLs at the folder level.
    - **Authorization in databases:** Management of database permissions is performed by setting access permissions on Azure Active Directory groups and users, which are external to the database. Object level security allows you to contol permissions on tables, views, stored procedures and functions.
@@ -662,8 +667,8 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 3. One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options.
 
    - WWI could achieve this in several ways using either Row Level Security, Column Level Security or Dynamic Data Masking. They might even benefit from all three being applied to the same table depending on their needs.
-   - **Row Level Security:** In Azure Synapse Analytics, tables in SQL Pool databases support Row Level Security (RLS). RLS enables you to implement restrictions on data row access.The access restriction logic is located in the database tier rather than away from the data in another application tier. The database system applies the access restrictions every time that data access is attempted from any tier. Think of RLS as effectively filtering out rows the user is not authorized to select, update or delete. This makes your security system more reliable and robust by reducing the surface area of your security system.
-   - **Columns Level Security:** In addition, tables in SQL Pool databases support Column Level Security (CLS). CLS enables you to control access to specific columns in a database table based on a user's group membership or execution context.
+   - **Row Level Security:** In Azure Synapse Analytics, tables in Azure Synapse SQL databases support Row Level Security (RLS). RLS enables you to implement restrictions on data row access.The access restriction logic is located in the database tier rather than away from the data in another application tier. The database system applies the access restrictions every time that data access is attempted from any tier. Think of RLS as effectively filtering out rows the user is not authorized to select, update or delete. This makes your security system more reliable and robust by reducing the surface area of your security system.
+   - **Columns Level Security:** In addition, tables in Azure Synapse SQL databases support Column Level Security (CLS). CLS enables you to control access to specific columns in a database table based on a user's group membership or execution context.
    - **Dynamic Data Masking:** Alternately, if parts only parts of a field need to be displayed according to the users's group membership (such as displaying only a few characters of an email address), then WWI could use Dynamic Data Masking.
 
 4. Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
@@ -707,18 +712,18 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 4. They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
 
-   - Azure Synapse Analytics support serverless querying via SQL on-demand.
-   - SQL On-Demand is an interactive query service that provides T-SQL queries over high scale data in Azure Storage.
+   - Azure Synapse Analytics support serverless querying via the serverless SQL endpoint.
+   - Azure Synapse SQL serverless is an always available SQL endpoint that provides T-SQL querying over high scale data in Azure Storage, and is ideal for ad hoc or bursty workloads.
    - Supports data in various formats (Parquet, CSV, JSON)
    - It would be appropriate for dashboards and reports, as it supports Power BI and can be used refresh dashboard datasets. It is also appropriate for basic data discovery and exploration and supporting "single query ETL" that  transforms Azure Storage based data in a massively parallel fashion.
 
 5. If their solution provides serverless querying, are they prevented from using pre-allocated query resources?
 
-   - No. This is a unique differentiator of Azure Synapse Analytics. Within one Azure Synapse Analytics workspace, they can have pre-provisioned SQL Pools, and also have SQL on-demand serverless querying.
+   - No. This is a unique differentiator of Azure Synapse Analytics. Within one Azure Synapse Analytics workspace, they can have pre-provisioned Azure Synapse SQL pools, and also have serverless querying using the Azure Synapse SQL serverless endpoint.
 
 6. Is my data protected at rest and do I have control over the keys used to encrypt it?
 
-   - For data stored in SQL Pool databases as well as data stored in Azure Storage (including Azure Data Lake Store gen 2), Azure Synapse Analytics supports transparent data encryption (TDE), which means all data is encrypted when written to disk and decrypted when read. When it comes to the keys used for encryption and decryption, TDE provides the option of using service managed keys that are supplied by Microsoft, or user managed keys that are provided by the customer and are stored securely in Azure Key Vault.
+   - For data stored in Azure Synapse SQL databases as well as data stored in Azure Storage (including Azure Data Lake Store gen 2), Azure Synapse Analytics supports transparent data encryption (TDE), which means all data is encrypted when written to disk and decrypted when read. When it comes to the keys used for encryption and decryption, TDE provides the option of using service managed keys that are supplied by Microsoft, or user managed keys that are provided by the customer and are stored securely in Azure Key Vault.
 
 ## Customer quote (to be read back to the attendees at the end)
 
