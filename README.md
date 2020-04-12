@@ -33,6 +33,7 @@ At the end of this whiteboard design session, you will be better able to design 
 -	Azure Synapse Analytics
 -	Azure Storage and Azure Data Lake gen 2
 -	Azure Stream Analytics
+-	Azure Machine Learning
 -	Azure App Service
 -	Event Hubs
 -	IoT Hub
