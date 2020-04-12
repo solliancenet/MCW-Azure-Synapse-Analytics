@@ -1,48 +1,46 @@
-# Microsoft Cloud Workshop template *(replace with workshop name)*
-*Please provide an introduction to the workshop. For example:*
+# Azure Synapse Analytics end-to-end solution
+Wide World Importers (WWI) has hundreds of brick and mortar stores and an online store where they sell a variety of products. They would like to:
 
-Trey Research Inc. looks at the old way of doing things in retail and introduces innovative experiences that delight customers and drive sales. Their latest initiative focuses on intelligent vending machines that support commerce, engagement analytics, and intelligent promotions. 
+* Gain business insights using historical, real-time, and predictive analytics using structured and unstructured data sources
+*	Enable their IT Team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data
+*	Enable business analysts and IT team to share a single source of truth and have a single workspace to collaborate and work with enterprise data and enriched customer data
+*	They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
 
-Month, year (date last reviewed)
+April 2020
 
 ## Target audience
-*Please list the target audience for this workshop. For example:*
--	Application developer
--	Infrastructure architect
--	Database administrator
--	AI developer
--	Data scientist
+- Data Engineer
+- Data Scientist
+- Machine Learning Engineer
+
 
 ## Abstracts
-*Please provide descriptions of the overall workshop, the whiteboard design session and hands on lab. For example:*
 
 ### Workshop
-In this workshop, you will look at the process of migrating an on-premises data warehouse to Azure SQL Data Warehouse. Throughout the whiteboard design session and hands-on lab, you will look at the planning process for data warehouse migration, identifying schema and data incompatibilities, efficiently migrating data from on-premises databases to the cloud, data distribution in Azure SQL Data Warehouse, migrating ETL jobs to Azure Data Factory, and supporting ad-hoc workloads in an Azure SQL Data Warehouse through Azure Analysis Services.
+In this workshop, you will look at the process of creating an end-to-end solution using Azure Synapse Analytics. The workshop will cover data loading, data preparation, data transformation and data serving, along with performing machine learning and handling of both batch and real-time data.
 
-At the end of this workshop, you will be better able to [deliver, demonstrate, solve, present, migrate, build, design, architect, construct, modify] ….
+At the end of this whiteboard design session, you will be better able to design and build a complete end-to-end advanced analytics solution using Azure Synapse Analytics.
 
-### Whiteboard design session *(this will go in the readme and in the WDS document)*
-In this whiteboard design session, you will work in a group to look at the process of migrating an on-premises data warehouse to Azure SQL Data Warehouse. The design session will cover planning for a data warehouse migration, data and schema preparation, data loading, optimizing the data distribution, and building a solution to support ad-hoc queries.
+### Whiteboard design session
+In this whiteboard design session, you will work in a group to look at the process of designing an end-to-end solution using Azure Synapse Analytics. The design session will cover data loading, data preparation, data transformation and data serving, along with performing machine learning and handling of both batch and real-time data.
 
-At the end of this whiteboard design session, you will be better able to [deliver, demonstrate, solve, present, migrate, build, design, architect, construct, modify] ….
+At the end of this whiteboard design session, you will be better able to design and build a complete end-to-end advanced analytics solution using Azure Synapse Analytics.
 
-### Hands-on lab *(this will go in the readme and in the HOL document)*
-In this hands-on lab, you will migrate an existing on-premises enterprise data warehouse to the cloud. You will investigate the current data warehouse to identify any incompatibilities, you will export the data from the on-premises data warehouse and transfer it to Azure Blob Storage. Then you will load the data into the warehouse. Finally, you will integrate the warehouse by migrating ETL to Azure Data Factory and supporting ad-hoc access by implementing Azure Analysis Services.
-
-At the end of this hands-on lab, you will be better able to [deliver, demonstrate, solve, present, migrate, build, design, architect, construct, modify] ….
+### Hands-on lab
+[Coming Soon]
 
 ## Azure services and related products
 *Please list the services and products that are highlighted in the workshop. For example:*
--	Azure SQL Data Warehouse
--	Azure Data Factory
--	Azure Analysis Services
--	Azure Storage
+-	Azure Synapse Analytics
+-	Azure Storage and Azure Data Lake gen 2
+-	Azure Stream Analytics
+-	Azure App Service
+-	Event Hubs
+-	IoT Hub
+-	Power BI
 
-## Azure solutions
-*This is an internal reference and will be updated by project PM.*
 
 ## Related references
-*This should be a list of and links to prereqs, architectural diagrams, supporting docs, or briefing decks related to the material.* 
 - [MCW](https://github.com/Microsoft/MCW)
 
 ## Help & Support

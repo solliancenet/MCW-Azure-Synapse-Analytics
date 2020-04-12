@@ -1,7 +1,7 @@
 ![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
 
 <div class="MCWHeader1">
-Azure Synapse Analytics
+Azure Synapse Analytics end-to-end solution
 </div>
 
 <div class="MCWHeader2">
@@ -9,7 +9,7 @@ Whiteboard design session student guide
 </div>
 
 <div class="MCWHeader3">
-March 2020
+April 2020
 </div>
 
 
@@ -27,7 +27,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Azure Synapse Analytics whiteboard design session student guide](#azure-synapse-analytics-whiteboard-design-session-student-guide)
+- [Azure Synapse Analytics end-to-end solution whiteboard design session student guide](#azure-synapse-analytics-end-to-end-solution-whiteboard-design-session-student-guide)
   - [Abstract and learning objectives](#abstract-and-learning-objectives)
   - [Step 1: Review the customer case study](#step-1-review-the-customer-case-study)
     - [Customer situation](#customer-situation)
@@ -41,7 +41,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- /TOC -->
 
-# Azure Synapse Analytics whiteboard design session student guide
+# Azure Synapse Analytics end-to-end solution whiteboard design session student guide
 
 ## Abstract and learning objectives 
 
@@ -66,17 +66,17 @@ Directions: With all participants in the session, the facilitator/SME presents a
 
 ### Customer situation
 
-Wide World Importers, WWI, has hundreds of brick and mortar stores and an online store where they sell a variety of products. 
+Wide World Importers (WWI) has hundreds of brick and mortar stores and an online store where they sell a variety of products.
 
-WWI believes that data is the oxygen of retail. Retail has never been short of data, but they have not been able to maximize the value of this data. They struggle with fragmented data and a lack of understanding of customer behavior and expectations and believe that a successful customer experience strategy is founded upon the effective use of data. 
+WWI believes that data is the oxygen of retail. Retail has never been short of data, but they have not been able to maximize the value of this data. They struggle with fragmented data and a lack of understanding of customer behavior and expectations and believe that a successful customer experience strategy is founded upon the effective use of data.
 
-They understand that using analytics on top of retail data has the potential to unlock ways for them to improve personalized, omni-channel campaigns that engage potential and existing customers across their buying journey. 
+They understand that using analytics on top of retail data has the potential to unlock ways for them to improve personalized, omni-channel campaigns that engage potential and existing customers across their buying journey.
 
-They would like to combine their retail lifecycle data including customer data, operations data, sourcing and supplier data as well as transaction data with analytics to reduce churn, enhance loyalty, advance customer journeys, enable the ability to conduct contextual marketing, measure attribution and provide insights across their enterprise to holistically drive growth across the organization. 
+They would like to combine their retail lifecycle data including customer data, operations data, sourcing and supplier data as well as transaction data with analytics to reduce churn, enhance loyalty, advance customer journeys, enable the ability to conduct contextual marketing, measure attribution and provide insights across their enterprise to holistically drive growth across the organization.
 
-They are looking to use historical campaign and customer analytics data and make decisions for the present. Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI sees an opportunity to use their data to predict the future, intially by making product recommendations.
+They are looking to use historical campaign and customer analytics data and make decisions for the present. Beyond these large historical data sets, they would like to use streaming tweet data from Twitter as well as telemetry from IoT sensors in their brick and mortar locations. In effect, they would like to use data from the present moment to inform decisions for the next moment. WWI sees an opportunity to use their data to predict the future, initially by making product recommendations.
 
-According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 30  billion rows. But that is not their only enteprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
+According to Peter Guerin, Chief Technical Officer (CTO), Wide World Importers has over 5 years of sales transaction data from Oracle, consisting of more than 30  billion rows. But that is not their only enterprise data source. They have finance data stored in SAP Hana, marketing data in Teradata and social media data coming in from Twitter. They need a solution that allows them to integrate, query over and analyze the data from all of these sources. Additionally, regardless of the volume, they want to be able to execute queries across such data with results returning in seconds.
 
 In addition to those data sources, they have in-store IoT sensors producing telemetry data that tracks the traffic patterns of customers walking the aisles. Each store has 50 sensors, and they have 100 stores equipped to provide this real-time data. Using this data they want to understand in which departments (or groups of aisles) people are spending most of their time, and which of those they are not. They would like a solution to ensure that this data gets ingested and processed in near real time, allowing them to quickly identify patterns that can be shared between stores. For example, as stores open on the East Coast, patterns detected in early buying behavior could inform last minute offers and in store product placement of products in their West Coast stores that have yet to open.
 
@@ -86,43 +86,37 @@ Peter also mentioned that, in his experience, a point of frustration with the to
 
 To bring their entire operation into perspective, Wide World Importers would like to create a dashboard where they can see their KPI's derived from historical data, real-time twitter sentiment and IoT sensor data, and key product recommendations generated using machine learning.
 
+### Customer needs
 
-### Customer needs 
+1. Gain business insights using a combination of historical, real-time, and predictive analytics.
 
-1.  Gain business insights using a combination of historical, real-time, and predictive analytics. 
+2. Have a unified approach to handling their structured and unstructured data sources.
 
-2.  Have a unified approach to handling their structured and unstructured data sources.
+3. Enable their team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data.
 
-3.  Enable their team of data engineers and data scientists to bring in and run complex queries over petabytes of structured data with billions of rows and unstructured enterprise operational data.
+4. Enable business analysts and data science/data engineering teams to share a single source of truth.
 
-4.  Enable business analysts and data science/data engineering teams to share a single source of truth. 
+5. They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
 
-5.  They would like to minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring.
+6. Prefer to accomplish this working withing a single collaborative environment.
 
-6.  Prefer to accomplish this working withing a single collaborative environment.
+7. They have concerns about performance, and want to make sure they can understand the core approaches they should take to ensure the best performance of the solution recommended.
 
-7.  They have concerns about performance, and want to make sure they can understand the core approaches they should take to ensure the best performance of the solution recommended.
+8. Need a solution that provides a consistent security model across all components.
 
-8.  Need a solution that provides a consistent security model across all components.
+### Customer objections
 
+1. WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution.
 
-### Customer objections 
+2. They have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
 
-1.  WWI understands that Azure offers several services with overlapping capabilities- they do not want to spend the time stitching them together to get to the desired analytics solution. 
+3. Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
 
-2.  The have seen demos from competing systems that claim to load massive datasets in seconds. Does Azure offer such a solution?
+4. They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
 
-3.  Can they really minimize the number of disparate services they use across ingest, transformation, querying and storage, so that their team of data engineers, data scientists and database administrators can master one tool, and can build shared best practices for development, management and monitoring?
+5. If their solution provide serverless querying, are they prevented from using pre-allocated query resources?
 
-4.  They have heard of serverless querying, does your solution offer this? Does it support querying the data at the scale of WWI and what formats does it support? Would this be appropriate for supporting their dashboards or reports?
-
-5.  If their solution provide serverless querying, are they prevented from using pre-allocated query resources? 
-
-6.  Is my data protected at rest and do I have control over the keys used to encrypt it?
-
-
-
-
+6. Is my data protected at rest and do I have control over the keys used to encrypt it?
 
 ### Infographic for common scenarios
 
@@ -140,9 +134,9 @@ Timeframe: 60 minutes
 
 Directions: With all participants at your table, answer the following questions and list the answers on a flip chart:
 
-1.  Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
+1. Who should you present this solution to? Who is your target customer audience? Who are the decision makers?
 
-2.  What customer business needs do you need to address with your solution?
+2. What customer business needs do you need to address with your solution?
 
 **Design**
 
@@ -150,105 +144,99 @@ Directions: With all participants at your table, respond to the following questi
 
 *High Level Architecture*
 
-1.	Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
+1.Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
 *Ingest & Store*
 
-1.	For the solution you recommend, what specific approach would you say to WWI is the most performant for moving flat file data from the ingest storage locations to the data lake? 
+1. For the solution you recommend, what specific approach would you say to WWI is the most efficient for moving flat file data from the ingest storage locations to the data lake?
 
-2.	What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
+2. What storage service would you recommend they use and how would you recommend they structure the folders so they can manage the data at the various levels of refinement?
 
-3.	When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
+3. When it comes to ingesting raw data in batch from new data sources, what data formats could they support with your solution?
 
-4.	How will you ingest streaming data from the in-store IoT devices?
-
+4. How will you ingest streaming data from the in-store IoT devices?
 
 *Transform*
 
-1.	Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
+1. Before building transformation pipelines or loading it into the data warehouse, how can WWI quickly explore the raw ingested data to understand its contents?
 
-2.	When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
+2. When it comes to storing refined versions of the data for possible querying, what data format would you recommend they use? Why?
 
-3.	Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code? 
+3. Regarding the service you recommend they use for preparing, merging and transforming the data, in which situations can they use the graphical designer and which situations would require code?
 
-4.	Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
+4. Their data team is accustomed to leveraging open source packages that help them quickly pre-process the data, as well as enable their data scientists to train machine learning models using both Spark and Python. Explain how your solution would enable this.
 
-5.	Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
-
-
+5. Does your solution allow their data engineers and data scientists to work within Jupyter notebooks? How are libraries managed?
 
 *Query*
 
 Their sales transaction dataset exceeds a billion rows. For their downstream reporting queries, they need to be able to join, project and filter these rows in no longer than 10s of seconds. WWI is concerned their data is just too big to do this.
 
-1.	What specific indexing techniques should they use to reach this kind of performance for their fact tables? Why?
+1. What specific indexing techniques should they use to reach this kind of performance for their fact tables? Why?
 
-2.	Would you recommend the same approach for tables they have with less than 100 million rows?
+2. Would you recommend the same approach for tables they have with less than 100 million rows?
 
-3.	How should they configure indexes on their smaller lookup tables (e.g., those that contain store names and addresses)?
+3. How should they configure indexes on their smaller lookup tables (e.g., those that contain store names and addresses)?
 
-4.	What would you suggest for their larger lookup tables that are used just for point lookups that retrieve only a single row? How could they makes these more flexible so that queries filtering against different sets of columns would still yield performant lookups?
+4. What would you suggest for their larger lookup tables that are used just for point lookups that retrieve only a single row? How could they makes these more flexible so that queries filtering against different sets of columns would still yield efficient lookups?
 
-5.	What should they use for the fastest loading of staging tables?
+5. What should they use for the fastest loading of staging tables?
   
-6.	What are the typical issues they should look out for with regards to **distributed** table design for the following scenarios? 
-    * Their smallest fact table exceeds several GB’s and by their nature experiences frequent inserts. 
-      
-    *	As they develop the data warehouse, the WWI data team identified some tables created from the raw input that might be useful, but they don’t currently join to other tables and they are not sure of the best columns they should use for distributing the data. 
-       
-    *	 Their data engineers sometimes use temporary staging tables in their data preparation. 
+6. What are the typical issues they should look out for with regards to **distributed** table design for the following scenarios?
 
-7.	Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure? 
+    - Their smallest fact table exceeds several GB’s and by their nature experiences frequent inserts.
 
-8.	What approach can they use to update the JSON data?
+    - As they develop the data warehouse, the WWI data team identified some tables created from the raw input that might be useful, but they don’t currently join to other tables and they are not sure of the best columns they should use for distributing the data.
 
-9.	In some of their queries, they are OK trading off speed of returning counts for a small reduction in accuracy. How might they do this?
+    - Their data engineers sometimes use temporary staging tables in their data preparation.
 
-10.	Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
+7. Some of their data contains columns in the JSON format, how could they flatten these hierarchical fields to a tabular structure?
 
+8. What approach can they use to update the JSON data?
 
+9. In some of their queries, they are OK trading off speed of returning counts for a small reduction in accuracy. How might they do this?
+
+10. Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
 
 *Visualize*
 
-1.	What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install? 
+1. What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install?
 
-2.	Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
+2. Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
 
-3.	With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
-
+3. With the product you recommend, do they need to load all the data into the data warehouse before they can create reports against it?
 
 *Manage*
 
-1.	In previous efforts, WWI systems struggled with their popularity. Exploratory queries that were not time sensitive would saturate the available resources and delay the execution of higher priority queries supporting critical reports. Explain how your solution helps to resolve this. 
+1. In previous efforts, WWI systems struggled with their own popularity. Exploratory queries that were not time sensitive would saturate the available resources and delay the execution of higher priority queries supporting critical reports. Explain how your solution helps to resolve this.
 
-2.	What does your solution provide to WWI to help them identify issues such as suboptimal table distribution, data skew, cache misses, tempdb contention and suboptimal plan selection?
+2. What does your solution provide to WWI to help them identify issues such as suboptimal table distribution, data skew, cache misses, `tempdb` contention and suboptimal plan selection?
 
-3.	WWI recognizes there is a balance between the data warehouse software staying up to date and when they can afford downtime that might result. How can they establish their preferences with your solution so they are never caught off guard with an upgrade?
+3. WWI recognizes there is a balance between the data warehouse software staying up to date and when they can afford downtime that might result. How can they establish their preferences with your solution so they are never caught off guard with an upgrade?
 
 *Secure*
 
-1.	How does your solution provide unified authentication, such as across SQL and Spark workloads? 
+1. How does your solution provide unified authentication, such as across SQL and Spark workloads?
 
-2.	How is access to data authorized for data stored in Azure Data Lake Store gen 2? In SQL Pool databases?
+2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In Azure Synapse SQL databases?
 
-3.	One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options. 
+3. One of WWI's challenges is that while multiple departments might be able to query a given table, what data they should be allowed to see depends on their department or role within the company. How could your solution support this? You should suggest three options.
 
-4.	Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
+4. Can the solution help WWI discover, track and remediate security misconfigurations and detect threats? How?
 
-5.	Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
- 
-6.	From a network security standpoint, how should your solution be secured?
+5. Can WWI use this same solution to monitor for sensitive information by enabling them to discover, classify and protect and track access to such data?
 
+6. From a network security standpoint, how should your solution be secured?
 
 **Prepare**
 
 Directions: With all participants at your table:
 
-1.  Identify any customer needs that are not addressed with the proposed solution.
+1. Identify any customer needs that are not addressed with the proposed solution.
 
-2.  Identify the benefits of your solution.
+2. Identify the benefits of your solution.
 
-3.  Determine how you will respond to the customer's objections.
+3. Determine how you will respond to the customer's objections.
 
 Prepare a 15-minute chalk-talk style presentation to the customer.
 
