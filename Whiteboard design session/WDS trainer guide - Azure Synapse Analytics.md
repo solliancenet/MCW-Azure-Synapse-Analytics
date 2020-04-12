@@ -612,7 +612,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 10. Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
 
     - They should consider result-set caching.
-    - Cache the results of a query in provisioned Azure Synapse SQL storage. This enables interactive response times for repetitive queries against tables with infrequent data changes.
+    - Cache the results of a query in provisioned Azure Synapse SQL pool storage. This enables interactive response times for repetitive queries against tables with infrequent data changes.
     - The result-set cache persists even if the provisioned Azure Synapse SQL is paused and resumed later.
     - Query cache is invalidated and refreshed when underlying table data or query code changes.
     - Result cache is evicted regularly based on a time-aware least recently used algorithm (TLRU).
@@ -621,7 +621,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 1. What product can WWI use to visualize their retail transaction data? Is it a separate tool that they need to install?
 
-   - Power BI. They can create, edit and view Power BI reports directly within the Azure Synapse Analytics workspace. They can also use Power BI Desktop to create and publish both datasets and reports that are then available within workspace.
+   - Power BI. They can create, edit and view Power BI reports directly within the Azure Synapse Studio. They can also use Power BI Desktop to create and publish both datasets and reports that are then available within workspace.
 
 2. Can they use this same tool to visualize both the batch and streaming data in a single dashboard view?
 
