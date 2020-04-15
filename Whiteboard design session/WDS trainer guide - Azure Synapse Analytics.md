@@ -472,11 +472,11 @@ The primary audience is the business decision makers and technology decision mak
 1. Diagram your initial vision for handling the top-level requirements for data loading, data transformation, storage, machine learning modeling, and reporting.
 
     * The following diagram illustrates the high level process for the "cold path" of the data pipeline architecture. It begins with ingesting the data from the Oracle, SAP Hana and Teradata sources. This can be done within Azure Synapse Analytics using Azure Synapse Pipelines containing the Copy Data activity, which lands the data in Azure Data Lake gen 2. When performing initial exploration of the data in the data lake, the data can be readily explored using Azure Synapse SQL to explore it with T-SQL or using Azure Synapse Spark to explore it within notebooks. 
-    * At this stage Data Flows, which are Synapse Pipeline activities just like the Copy Data activity, can be created using the graphical designer to perform some data preparation tasks. 
+    * At this stage Mapping Data Flows, which are Synapse Pipeline activities just like the Copy Data activity, can be created using the graphical designer to perform some data preparation tasks. 
     * Next, the data can be transformed and enriched in several ways. 
     * Azure Synapse SQL offers both serverless and provisioned resource models, offering consumption and billing options to fit the customer's needs. For predictable performance and cost, provision pools to reserve processing power for data stored in SQL tables. For ad hoc or bursty workloads, use the serverless, always-available SQL endpoint. 
-    * Azure Synapse SQL provisioned pools and the Azure Synapse SQL serverless endpoint can be used to apply transformations using T-SQL, as can notebooks running in Azure Synapse Spark. A Synapse Pipeline is also commonly used at this stage to define a repeatable process for cleaning, joining, enriching and ultimately loading the data into the Azure Synapse SQL that functions as the serving database. 
-    * The serving layer can consist of dedicated Azure Synapse SQL provisioned instances to provide pre-provisioned compute capacity to serve both data from the relational data warehouse or data sourced from the data lake. Additionally, the serving layer can use Azure Synapse SQL serverless to provide ad-hoc compute capacity for querying data stored in the data lake. Either of these serving options can be used by Power BI reports created within Azure Synapse Analytics, or by external applications. The important take away from this architecture is that all of the components shown are completely managed within Azure Synapse Analytics.
+    * Azure Synapse SQL Pools and the Azure Synapse SQL serverless endpoint can be used to apply transformations using T-SQL, as can notebooks running in Azure Synapse Spark. A Synapse Pipeline is also commonly used at this stage to define a repeatable process for cleaning, joining, enriching and ultimately loading the data into the Azure Synapse SQL that functions as the serving database. 
+    * The serving layer can consist of a dedicated Azure Synapse SQL Pool to provide pre-provisioned compute capacity to serve both data from the relational data warehouse or data sourced from the data lake. Additionally, the serving layer can use Azure Synapse SQL serverless to provide ad-hoc compute capacity for querying data stored in the data lake. Either of these serving options can be used by Power BI reports created within Azure Synapse Analytics, or by external applications. The important take away from this architecture is that all of the components shown are completely managed within Azure Synapse Analytics.
     ![High level architecture](media/preferred-solution.png)
     * The following diagram illustrates how they could handle the streaming data, the "hot path". Twitter tweet data needs to be pulled using a WebJob. This WebJob would load the tweets into Event Hubs so that they could be processed reliably using Stream Analytics. Stream Analytics can be used both to archive all tweets to the data lake for offline or batch analysis using Azure Synapse SQL provisioned within Azure Synapse Analytics, as well as to send live data to Power BI reports for real-time dashboards and reports. The in-store IoT sensors could ingest their data into IoT Hub directly, and by integrating with IoT Hub also benefit from the device management capabilities that IoT Hub enables. Ultimately this data would also be processed by another Stream Analytics job and served in the same was as the tweets.
     ![High level architecture](media/preferred-solution-streaming.png)
@@ -612,8 +612,8 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 10. Their downstream reports are used by many users, which often means the same query is being executed repeatedly against data that does not change that often. What can WWI to improve the performance of these types of queries? How does this approach work when the underlying data changes?
 
     - They should consider result-set caching.
-    - Cache the results of a query in provisioned Azure Synapse SQL pool storage. This enables interactive response times for repetitive queries against tables with infrequent data changes.
-    - The result-set cache persists even if the provisioned Azure Synapse SQL is paused and resumed later.
+    - Cache the results of a query in provisioned Azure Synapse SQL Pool storage. This enables interactive response times for repetitive queries against tables with infrequent data changes.
+    - The result-set cache persists even if the Azure Synapse SQL Pool is paused and resumed later.
     - Query cache is invalidated and refreshed when underlying table data or query code changes.
     - Result cache is evicted regularly based on a time-aware least recently used algorithm (TLRU).
 
@@ -657,7 +657,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 1. How does your solution provide unified authentication, such as across SQL and Spark workloads?
 
-   - Azure Synapse Analytics uses Azure Active Directory (AAD) as its authentication mechanism. When a user logs into an Azure Synapse Analytics workspace, the active user's AAD credential is implicitly used to execute T-SQL queries on a provisioned Azure Synapse SQL pool, to run notebooks in an Azure Synapse Spark pool and to access Power BI reports. This same AAD credential is also utilized in controlling access to the data stored within Azure Synapse SQL databases or stored within a hierarchical file system in Azure Storage (Azure Data Lake Store gen 2 or ADLS gen 2). By leveraging AAD, Azure Synapse Analytics allows for the centralized management of user identities.
+   - Azure Synapse Analytics uses Azure Active Directory (AAD) as its authentication mechanism. When a user logs into an Azure Synapse Analytics workspace, the active user's AAD credential is implicitly used to execute T-SQL queries on a provisioned Azure Synapse SQL Pool, to run notebooks in an Azure Synapse Spark pool and to access Power BI reports. This same AAD credential is also utilized in controlling access to the data stored within Azure Synapse SQL databases or stored within a hierarchical file system in Azure Storage (Azure Data Lake Store gen 2 or ADLS gen 2). By leveraging AAD, Azure Synapse Analytics allows for the centralized management of user identities.
 
 2. How is access to data authorized for data stored in Azure Data Lake Store gen 2? In Azure Synapse SQL databases?
 
@@ -719,7 +719,7 @@ Their sales transaction dataset exceeds a billion rows. For their downstream rep
 
 5. If their solution provides serverless querying, are they prevented from using pre-allocated query resources?
 
-   - No. This is a unique differentiator of Azure Synapse Analytics. Within one Azure Synapse Analytics workspace, they can have pre-provisioned Azure Synapse SQL pools, and also have serverless querying using the Azure Synapse SQL serverless endpoint.
+   - No. This is a unique differentiator of Azure Synapse Analytics. Within one Azure Synapse Analytics workspace, they can have pre-provisioned Azure Synapse SQL Pools, and also have serverless querying using the Azure Synapse SQL serverless endpoint.
 
 6. Is my data protected at rest and do I have control over the keys used to encrypt it?
 
