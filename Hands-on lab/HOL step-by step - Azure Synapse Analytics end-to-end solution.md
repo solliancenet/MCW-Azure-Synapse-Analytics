@@ -46,6 +46,13 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 1 - Column level security](#task-1---column-level-security)
     - [Task 2 - Row level security](#task-2---row-level-security)
     - [Task 3 - Dynamic data masking](#task-3---dynamic-data-masking)
+  - [Exercise 7 - Monitoring](#monitoring)	
+    - [Task 1 - Workload Importance](#task-1-workload-importance)	
+    - [Task 2 - Workload Isolation](#task-2-workload-isolation)	
+    - [Task 3 - Monitoring with Dynamic Management Views](#task-3-monitoring-with-dynamic-management-views)	
+    - [Task 4 - Orchestration Monitoring with the Monitor Hub](#task-4-orchestration-monitoring-with-the-monitor-hub)	
+    - [Task 5 - Monitoring SQL Requests with the Monitor Hub](#task-5-monitoring-sql-requests-with-the-monitor-hub)
+    
   - [After the hands-on lab](#after-the-hands-on-lab)
 <!-- /TOC -->
 
@@ -73,7 +80,7 @@ Refer to the Before the hands-on lab setup guide manual before continuing to the
 
 ## Resource naming throughout this lab
 
-For the remainder of this guide, the following terms will be used for various ASA-related resources (make sure you replace them with actual names and values from your environment):
+For the remainder of this guide, the following terms will be used for various ASA (Azure Synapse Analytics) related resources (make sure you replace them with actual names and values from your environment):
 
 | Azure Synapse Analytics Resource  | To be referred to                                                                  |
 |-----------------------------------|------------------------------------------------------------------------------------|
@@ -594,6 +601,17 @@ It is important to identify data columns of that hold sensitive information. Typ
     ALTER COLUMN Email DROP MASKED;
     GO
 ```
+## Exercise 7: Monitoring
+
+### Task 1: Workload Importance
+
+### Task 2: Workload Isolation
+
+### Task 3: Monitoring with Dynamic Management Views
+
+### Task 4: Orchestration Monitoring with the Monitor Hub
+
+### Task 5: Monitoring SQL Requests with the Monitor Hub
 
 ## After the hands-on lab
 
