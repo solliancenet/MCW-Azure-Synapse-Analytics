@@ -37,8 +37,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 1: Launching Synapse Studio](#task-1-launching-synapse-studio)
   - [Exercise 2: Create and populate customer information and sales tables in the SQL Pool](#exercise-2-create-and-populate-customer-information-and-sales-tables-in-the-sql-pool)
     - [Task 1: Create an HTTP linked service to obtain raw data](#task-1-create-an-http-linked-service-to-obtain-raw-data)
-    - [Task 3: Create and populate the customer information table](#task-3-create-and-populate-the-customer-information-table)
-    - [Task 4: Create and populate the sales table](#task-4-create-and-populate-the-sales-table)
+    - [Task 2: Create supporting tables in the SQL Pool](#task-2-create-supporting-tables-in-the-sql-pool)
   - [Exercise 5 - Security](#exercise-5---security)
     - [Task 1 - Column level security](#task-1---column-level-security)
     - [Task 2 - Row level security](#task-2---row-level-security)
@@ -90,7 +89,7 @@ All exercises in this lab utilize the workspace Synapse Studio user interface. T
 
 ### Task 1: Launching Synapse Studio
 
-1. Log into the ![Azure Portal](https://portal.azure.com).
+1. Log into the [Azure Portal](https://portal.azure.com).
 
 2. Expand the left menu, and select the **Resource groups** item.
   
@@ -110,7 +109,7 @@ All exercises in this lab utilize the workspace Synapse Studio user interface. T
 
 Duration: X minutes
 
-The first step in querying meaningful data is to create tables to house the data. In this case, we will create two different tables: CustomerInfo and Sales. When designing tables in Azure Synapse Analytics, we need to take into account the expected amount of data in each table, as well as how each will be used. Utilize the following guidance when designing your tables to ensure the best experience and performance.
+The first step in querying meaningful data is to create tables to house the data. In this case, we will create two different tables: CustomerInfo and Sales. When designing tables in Azure Synapse Analytics, we need to take into account the expected amount of data in each table, as well as how each table will be used. Utilize the following guidance when designing your tables to ensure the best experience and performance.
 
 Table design performance considerations
 
@@ -163,19 +162,261 @@ Linked Services are synonymous with connection strings in Azure Synapse Analytic
 
 7. In the Publish all blade, select the **Publish** button to commit the changes.
 
-### Task 3: Create and populate the customer information table
+### Task 2: Create supporting tables in the SQL Pool
 
-Over the past 5 years, Wide World Importers has amassed over 3 billion rows of sales data. With this quantity of data, the customer information lookup table is estimated to have over 100 million rows but will consume less than 1.5 GB of storage. While we will be using only a subset of this data for the lab, we will design the table for the production environment. Using the guidance outlined in the task description, we can ascertain that we will need a **Clustered Columnstore** table with a **Replicated** table distribution.
+Over the past 5 years, Wide World Importers has amassed over 3 billion rows of sales data. With this quantity of data, the customer information lookup table is estimated to have over 100 million rows but will consume less than 1.5 GB of storage. While we will be using only a subset of this data for the lab, we will design the table for the production environment. Using the guidance outlined in the task description, we can ascertain that we will need a **Clustered Columnstore** table with a **Replicated** table distribution to hold customer data.
 
-### Task 4: Create and populate the sales table
+1. Create the customer information table
+  
+   ```sql
+
+    CREATE TABLE [wwi_mcw].[CustomerInfo]
+    (
+      [UserName] [nvarchar](100)  NULL,
+      [Gender] [nvarchar](10)  NULL,
+      [Phone] [nvarchar](50)  NULL,
+      [Email] [nvarchar](150)  NULL,
+      [CreditCard] [nvarchar](21)  NULL
+    )
+    WITH
+    (
+      DISTRIBUTION = REPLICATE,
+      CLUSTERED COLUMNSTORE INDEX
+    )
+    GO
+   ```
+  
+2. Create the sale table
+
+  ```sql
+    CREATE TABLE [wwi].[SaleSmall]
+    (
+      [TransactionId] [uniqueidentifier]  NOT NULL,
+      [CustomerId] [int]  NOT NULL,
+      [ProductId] [smallint]  NOT NULL,
+      [Quantity] [tinyint]  NOT NULL,
+      [Price] [decimal](9,2)  NOT NULL,
+      [TotalAmount] [decimal](9,2)  NOT NULL,
+      [TransactionDateId] [int]  NOT NULL,
+      [ProfitAmount] [decimal](9,2)  NOT NULL,
+      [Hour] [tinyint]  NOT NULL,
+      [Minute] [tinyint]  NOT NULL,
+      [StoreId] [smallint]  NOT NULL
+    )
+    WITH
+    (
+      DISTRIBUTION = HASH ( [CustomerId] ),
+      CLUSTERED COLUMNSTORE INDEX,
+      PARTITION
+      (
+        [TransactionDateId] RANGE RIGHT FOR VALUES (
+          20100101, 20100201, 20100301, 20100401, 20100501, 20100601, 20100701, 20100801, 20100901, 20101001, 20101101, 20101201, 
+          20110101, 20110201, 20110301, 20110401, 20110501, 20110601, 20110701, 20110801, 20110901, 20111001, 20111101, 20111201, 
+          20120101, 20120201, 20120301, 20120401, 20120501, 20120601, 20120701, 20120801, 20120901, 20121001, 20121101, 20121201, 
+          20130101, 20130201, 20130301, 20130401, 20130501, 20130601, 20130701, 20130801, 20130901, 20131001, 20131101, 20131201, 
+          20140101, 20140201, 20140301, 20140401, 20140501, 20140601, 20140701, 20140801, 20140901, 20141001, 20141101, 20141201, 
+          20150101, 20150201, 20150301, 20150401, 20150501, 20150601, 20150701, 20150801, 20150901, 20151001, 20151101, 20151201, 
+          20160101, 20160201, 20160301, 20160401, 20160501, 20160601, 20160701, 20160801, 20160901, 20161001, 20161101, 20161201, 
+          20170101, 20170201, 20170301, 20170401, 20170501, 20170601, 20170701, 20170801, 20170901, 20171001, 20171101, 20171201, 
+          20180101, 20180201, 20180301, 20180401, 20180501, 20180601, 20180701, 20180801, 20180901, 20181001, 20181101, 20181201, 
+          20190101, 20190201, 20190301, 20190401, 20190501, 20190601, 20190701, 20190801, 20190901, 20191001, 20191101, 20191201)
+      )
+    )
+  ```
 
 ## Exercise 5 - Security
 
+It is important to identify data columns of that hold sensitive information. Types of sensitive could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
+
 ### Task 1 - Column level security
+
+  ```sql
+      /*  Column-level security feature in Azure Synapse simplifies the design and coding of security in application.
+        It ensures column level security by restricting column access to protect sensitive data. */
+
+    /* Scenario: In this scenario we will be working with two users. The first one is the CEO, he has access to all
+        data. The second one is DataAnalystMiami, this user doesn't have access to the confidential Revenue column
+        in the Sales table. Follow this lab, one step at a time to see how Column-level security removes access to the
+        Revenue column to DataAnalystMiami */
+
+    --Step 1: Let us see how this feature in Azure Synapse works. Before that let us have a look at the Campaign table.
+    select  Top 100 * from wwi_Security.Sale
+    where City is not null and state is not null
+
+    /*  Consider a scenario where there are two users.
+        A CEO, who is an authorized  personnel with access to all the information in the database
+        and a Data Analyst, to whom only required information should be presented.*/
+
+    -- Step:2 Verify the existence of the “CEO” and “DataAnalystMiami” users in the Datawarehouse.
+    SELECT Name as [User1] FROM sys.sysusers WHERE name = N'CEO';
+    SELECT Name as [User2] FROM sys.sysusers WHERE name = N'DataAnalystMiami';
+
+
+    -- Step:3 Now let us enforcing column level security for the DataAnalystMiami.
+    /*  The Sales table in the warehouse has information like ProductID, Analyst, Product, CampaignName, Quantity, Region, State, City, RevenueTarget and Revenue.
+        The Revenue generated from every campaign is classified and should be hidden from DataAnalystMiami.
+    */
+
+    REVOKE SELECT ON wwi_security.Sale FROM DataAnalystMiami;
+    GRANT SELECT ON wwi_security.Sale([ProductID], [Analyst], [Product], [CampaignName],[Quantity], [Region], [State], [City], [RevenueTarget]) TO DataAnalystMiami;
+    -- This provides DataAnalystMiami access to all the columns of the Sale table but Revenue.
+
+    -- Step:4 Then, to check if the security has been enforced, we execute the following query with current User As 'DataAnalystMiami', this will result in an error
+    --  since DataAnalystMiami doesn't have select access to the Revenue column
+    EXECUTE AS USER ='DataAnalystMiami';
+    select TOP 100 * from wwi_security.Sale;
+    ---
+    -- The following query will succeed since we are not including the Revenue column in the query.
+    EXECUTE AS USER ='DataAnalystMiami';
+    select [ProductID], [Analyst], [Product], [CampaignName],[Quantity], [Region], [State], [City], [RevenueTarget] from wwi_security.Sale;
+
+    -- Step:5 Whereas, the CEO of the company should be authorized with all the information present in the warehouse.To do so, we execute the following query.
+    Revert;
+    GRANT SELECT ON wwi_security.Sale TO CEO;  --Full access to all columns.
+
+    -- Step:6 Let us check if our CEO user can see all the information that is present. Assign Current User As 'CEO' and the execute the query
+    EXECUTE AS USER ='CEO'
+    select * from wwi_security.Sale
+    Revert;
+  ```
 
 ### Task 2 - Row level security
 
+  ```sql
+    /* Row level Security (RLS) in Azure Synapse enables us to use group membership to control access to rows in a table.
+    Azure Synapse applies the access restriction every time the data access is attempted from any user. 
+    Let see how we can implement row level security in Azure Synapse.*/
+
+  ----------------------------------Row-Level Security (RLS), 1: Filter predicates------------------------------------------------------------------
+  -- Step:1 The Sale table has two Analyst values: DataAnalystMiami and DataAnalystSanDiego. 
+  --     Each analyst has jurisdiction across a specific Region. DataAnalystMiami on the South East Region
+  --      and DataAnalystSanDiego on the Far West region.
+  SELECT DISTINCT Analyst, Region FROM wwi_security.Sale order by Analyst ;
+
+  /* Scenario: WWI requires that an Analyst only see the data for their own data from their own region. The CEO should see ALL data.
+      In the Sale table, there is an Analyst column that we can use to filter data to a specific Analyst value. */
+
+  /* We will define this filter using what is called a Security Predicate. This is an inline table-valued function that allows
+      us to evaluate additional logic, in this case determining if the Analyst executing the query is the same as the Analyst
+      specified in the Analyst column in the row. The function returns 1 (will return the row) when a row in the Analyst column is the same as the 
+      user executing the query (@Analyst = USER_NAME()) or if the user executing the query is the CEO user (USER_NAME() = 'CEO')
+      whom has access to all data.
+  */
+
+  -- Review any existing security predicates in the database
+  SELECT * FROM sys.security_predicates
+
+  --Step:2 Create a new Schema to hold the security predicate, then define the predicate function. It returns 1 (or True) when
+  --  a row should be returned in the parent query.
+  GO
+  CREATE SCHEMA Security
+  GO
+  CREATE FUNCTION Security.fn_securitypredicate(@Analyst AS sysname)  
+      RETURNS TABLE  
+  WITH SCHEMABINDING  
+  AS  
+      RETURN SELECT 1 AS fn_securitypredicate_result
+      WHERE @Analyst = USER_NAME() OR USER_NAME() = 'CEO'
+  GO
+  -- Now we define security policy that adds the filter predicate to the Sale table. This will filter rows based on their login name.
+  CREATE SECURITY POLICY SalesFilter  
+  ADD FILTER PREDICATE Security.fn_securitypredicate(Analyst)
+  ON wwi_security.Sale
+  WITH (STATE = ON);
+
+  ------ Allow SELECT permissions to the Sale Table.------
+  GRANT SELECT ON wwi_security.Sale TO CEO, DataAnalystMiami, DataAnalystSanDiego;
+
+  -- Step:3 Let us now test the filtering predicate, by selecting data from the Sale table as 'DataAnalystMiami' user.
+  EXECUTE AS USER = 'DataAnalystMiami' 
+  SELECT * FROM wwi_security.Sale;
+  revert;
+  -- As we can see, the query has returned rows here Login name is DataAnalystMiami
+
+  -- Step:4 Let us test the same for  'DataAnalystSanDiego' user.
+  EXECUTE AS USER = 'DataAnalystSanDiego'; 
+  SELECT * FROM wwi_security.Sale;
+  revert;
+  -- RLS is working indeed.
+
+  -- Step:5 The CEO should be able to see all rows in the table.
+  EXECUTE AS USER = 'CEO';  
+  SELECT * FROM wwi_security.Sale;
+  revert;
+  -- And he can.
+
+  --Step:6 To disable the security policy we just created above, we execute the following.
+  ALTER SECURITY POLICY SalesFilter  
+  WITH (STATE = OFF);
+
+  DROP SECURITY POLICY SalesFilter;
+  DROP FUNCTION Security.fn_securitypredicate;
+  DROP SCHEMA Security;
+  ```
+
 ### Task 3 - Dynamic data masking
+
+```sql
+    -------------------------------------------------------------------------Dynamic Data Masking (DDM)----------------------------------------------------------------------------------------------------------
+    /*  Dynamic data masking helps prevent unauthorized access to sensitive data by enabling customers
+        to designate how much of the sensitive data to reveal with minimal impact on the application layer.
+        Let see how */
+
+    /* Scenario: WWI has identified sensitive information in the CustomerInfo table. They would like us to
+        obfuscate the CreditCard and Email columns of the CustomerInfo table to DataAnalysts */
+
+    -- Step:1 Let us first get a view of CustomerInfo table.
+    SELECT TOP (100) * FROM wwi_security.CustomerInfo;
+
+    -- Step:2 Let's confirm that there are no Dynamic Data Masking (DDM) applied on columns.
+    SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  
+    FROM sys.masked_columns AS c  
+    JOIN sys.tables AS tbl
+        ON c.[object_id] = tbl.[object_id]  
+    WHERE is_masked = 1
+        AND tbl.name = 'CustomerInfo';
+    -- No results returned verify that no data masking has been done yet.
+
+    -- Step:3 Now lets mask 'CreditCard' and 'Email' Column of 'CustomerInfo' table.
+    ALTER TABLE wwi_security.CustomerInfo  
+    ALTER COLUMN [CreditCard] ADD MASKED WITH (FUNCTION = 'partial(0,"XXXX-XXXX-XXXX-",4)');
+    GO
+    ALTER TABLE wwi_security.CustomerInfo
+    ALTER COLUMN Email ADD MASKED WITH (FUNCTION = 'email()');
+    GO
+    -- The columns are sucessfully masked.
+
+    -- Step:4 Let's see Dynamic Data Masking (DDM) applied on the two columns.
+    SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  
+    FROM sys.masked_columns AS c  
+    JOIN sys.tables AS tbl
+        ON c.[object_id] = tbl.[object_id]  
+    WHERE is_masked = 1
+        AND tbl.name ='CustomerInfo';
+
+    -- Step:5 Now, let us grant SELECT permission to 'DataAnalystMiami' on the 'CustomerInfo' table.
+   GRANT SELECT ON wwi_security.CustomerInfo TO DataAnalystMiami;  
+
+    -- Step:6 Logged in as  'DataAnalystMiami' let us execute the select query and view the result.
+    EXECUTE AS USER = 'DataAnalystMiami';  
+    SELECT * FROM wwi_security.CustomerInfo;
+
+    -- Step:7 Let us remove the data masking using UNMASK permission
+    GRANT UNMASK TO DataAnalystMiami;
+    EXECUTE AS USER = 'DataAnalystMiami';  
+    SELECT *
+    FROM wwi_security.CustomerInfo;
+    revert;
+    REVOKE UNMASK TO DataAnalystMiami;  
+
+    ----step:8 Reverting all the changes back to as it was.
+    ALTER TABLE wwi_security.CustomerInfo
+    ALTER COLUMN CreditCard DROP MASKED;
+    GO
+    ALTER TABLE wwi_security.CustomerInfo
+    ALTER COLUMN Email DROP MASKED;
+    GO
+```
 
 ## After the hands-on lab
 
