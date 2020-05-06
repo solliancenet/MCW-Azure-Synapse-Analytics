@@ -69,7 +69,7 @@ Refer to the Before the hands-on lab setup guide manual before continuing to the
 
 ## Resource naming throughout this lab
 
-For the remainder of this guide, the following terms will be used for various ASA-related resources (make sure you replace them with actual names and values from your environment):
+For the remainder of this guide, the following terms will be used for various ASA (Azure Synapse Analytics) related resources (make sure you replace them with actual names and values from your environment):
 
 | Azure Synapse Analytics Resource  | To be referred to                                                                  |
 |-----------------------------------|------------------------------------------------------------------------------------|
