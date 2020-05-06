@@ -35,9 +35,13 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Resource naming throughout this lab](#resource-naming-throughout-this-lab)
   - [Exercise 1: Accessing the Azure Synapse Analytics workspace](#exercise-1-accessing-the-azure-synapse-analytics-workspace)
     - [Task 1: Launching Synapse Studio](#task-1-launching-synapse-studio)
-  - [Exercise 2: Create and populate customer information and sales tables in the SQL Pool](#exercise-2-create-and-populate-customer-information-and-sales-tables-in-the-sql-pool)
-    - [Task 1: Create an HTTP linked service to obtain raw data](#task-1-create-an-http-linked-service-to-obtain-raw-data)
-    - [Task 2: Create supporting tables in the SQL Pool](#task-2-create-supporting-tables-in-the-sql-pool)
+  - [Exercise 2: Create and populate the supporting tables in the SQL Pool](#exercise-2-create-and-populate-the-supporting-tables-in-the-sql-pool)
+    - [Task 1: Create the customer information table](#task-1-create-the-customer-information-table)
+    - [Task 2 - Populate the customer information table](#task-2---populate-the-customer-information-table)
+    - [Task 3: Create the campaign analytics table](#task-3-create-the-campaign-analytics-table)
+    - [Task 4: Populate the campaign analytics table](#task-4-populate-the-campaign-analytics-table)
+    - [Task 5: Create the sale table](#task-5-create-the-sale-table)
+    - [Task 5 - Populate the sale table](#task-5---populate-the-sale-table)
   - [Exercise 5 - Security](#exercise-5---security)
     - [Task 1 - Column level security](#task-1---column-level-security)
     - [Task 2 - Row level security](#task-2---row-level-security)
@@ -105,7 +109,7 @@ All exercises in this lab utilize the workspace Synapse Studio user interface. T
 
     ![On the Synapse workspace resource screen, the Overview pane is shown with the Launch Synapse Studio button highlighted in the top toolbar. The Workspace web URL value is also highlighted.](media/workspaceresource_launchsynapsestudio.png)
 
-## Exercise 2: Create and populate customer information and sales tables in the SQL Pool
+## Exercise 2: Create and populate the supporting tables in the SQL Pool
 
 Duration: X minutes
 
@@ -126,50 +130,21 @@ Table design performance considerations
 | Round robin distribution | default distribution, when little is known about the data or how it will be used. Use this distribution for staging tables |
 | Replicated tables | smaller lookup tables less than 1.5 GB in size |
 
-### Task 1: Create an HTTP linked service to obtain raw data
+### Task 1: Create the customer information table
 
-Linked Services are synonymous with connection strings in Azure Synapse Analytics. Azure Synapse Analytics linked services provides the ability to connect to nearly 100 different types of external services ranging from Azure Storage Accounts to Amazon S3 and more. In this exercise, we will be pulling raw data that is housed in CSV format from a public HTTP endpoint. We will need to create a Linked Service to define the location where this data will be obtained.
+Over the past 5 years, Wide World Importers has amassed over 3 billion rows of sales data. With this quantity of data, the customer information lookup table is estimated to have over 100 million rows but will consume less than 1.5 GB of storage. While we will be using only a subset of this data for the lab, we will design the table for the production environment. Using the guidance outlined in the Exercising description, we can ascertain that we will need a **Clustered Columnstore** table with a **Replicated** table distribution to hold customer data.
 
-1. Expand the left menu and select the **Manage** item.
+1. Expand the left menu and select the **Develop** item. From the **Develop** blade, expand the **+** button and select the **SQL script** item.
 
-    ![In Synapse Studio, the left menu is expanded and the Manage item is selected.](media/synapsestudio_leftmenu_manage.png)
+    ![The left menu is expanded with the Develop item selected. The Develop blade has the + button expanded with the SQL script item highlighted.](media/develop_newsqlscript_menu.png)
 
-2. From the secondary menu, beneath **External connections** select **Linked services**.
+2. In the query tab toolbar menu, ensure you connect to your SQL Pool, `SQLPool01`.
 
-    ![The Manage menu is displayed with the Linked services item selected beneath the External connections section.](media/synapsestudio_managemenu_linkedservices.png)
+    ![The query tab toolbar menu is displayed with the Connect to set to the SQL Pool.](media/querytoolbar_connecttosqlpool.png)
 
-3. On the **Linked services** screen, select **+ New** from the toolbar menu.
-
-    ![The top portion of the Linked services screen is displayed with the + New button selected from the toolbar menu.](media/synapsestudio_linkedservices_toolbar_new.png)
-
-4. On the **New linked service** blade, select the **File** tab and the **HTTP** item; then select **Continue**.
-
-    ![The New linked service blade is shown with the File tab selected and the HTTP item selected from the filtered results.](media/newlinkedservice_file_http.png)
-
-5. On the **New linked service (HTTP)** blade, fill the form as follows, then select **Create**:
-  
-   | Field | Value |
-   |-------|-------|
-   | Name  | Enter `asamcw_publicdata` |
-   | Base URL | Enter `https://solliancepublicdata.blob.core.windows.net/` |
-   | Authentication type | Select **Anonymous** |
-
-   ![The New linked service (HTTP) blade is displayed populated with the values from the previous table.](media/newlinkedservicehttp_form.png)
-
-6. On the **Manage** screen toolbar, you should now see one change that hasn't been published. Select the **Publish all** button to publish the new linked service.
-
-    ![The Manage screen is displayed with the Publish all button selected from the toolbar. There is a badge on the Publish all button indicating 1 change is pending.](media/linkedservice_publishall_toolbar.png)
-
-7. In the Publish all blade, select the **Publish** button to commit the changes.
-
-### Task 2: Create supporting tables in the SQL Pool
-
-Over the past 5 years, Wide World Importers has amassed over 3 billion rows of sales data. With this quantity of data, the customer information lookup table is estimated to have over 100 million rows but will consume less than 1.5 GB of storage. While we will be using only a subset of this data for the lab, we will design the table for the production environment. Using the guidance outlined in the task description, we can ascertain that we will need a **Clustered Columnstore** table with a **Replicated** table distribution to hold customer data.
-
-1. Create the customer information table
+3. In the query window, copy and paste the following query to create the customer information table. Then select the **Run** button in the query tab toolbar.
   
    ```sql
-
     CREATE TABLE [wwi_mcw].[CustomerInfo]
     (
       [UserName] [nvarchar](100)  NULL,
@@ -186,7 +161,122 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
     GO
    ```
 
-2. Create the campaign analytics table
+   ![The query tab toolbar is displayed with the Run button selected.](media/querytoolbar_run.png)
+
+4. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
+
+### Task 2 - Populate the customer information table
+
+1. The data that we will be retrieving to populate the customer information table is currently stored in CSV format in a public blob storage container. The storage account that possesses this data has already been added as a linked service in Azure Synapse Analytics when the environment was provisioned.  Linked Services are synonymous with connection strings in Azure Synapse Analytics. Azure Synapse Analytics linked services provides the ability to connect to nearly 100 different types of external services ranging from Azure Storage Accounts to Amazon S3 and more. Review the presence of the **solliancepublicdata** linked service, by selecting **Manage** from the left menu, and selecting **Linked services** from the blade menu. Filter the linked services by the term **solliance** to find the **solliancepublicdata** item. Further investigating this item will unveil that it makes a connection to the storage account using a storage account key.
+  
+   ![The Manage item is selected from the left menu. The Linked services menu item is selected on the blade. On the Linked services screen the term solliance is entered in the search box and the solliancepublicdata Azure Blob Storage item is selected from the filtered results list.](media/manage_linkedservices_solliancepublicdata.png)
+
+2. Similar to the previous step, the destination for our data has also been added as a linked service. In this case, the destination for our data is our SQL Pool, `SQLPool01`. Repeat the previous step, this time filtering with the term **sqlpool** to verify the existence of the linked service.
+
+3. The next thing that we will need to do is define a source dataset that will represent the information that we are copying over. This dataset will reference the CSV file containing customer information. From the left menu, select **Data**. From the **Data** blade, expand the **+** button and select **Dataset**.
+
+    ![The Data item is selected from the left menu. On the Data blade, the + button is expanded with the Dataset item highlighted.](media/data_newdatasetmenu.png)
+
+4. On the **New dataset** blade, with the **All** tab selected, choose the **Azure Blob Storage** item. Select **Continue**.  
+  
+    ![On the New dataset blade, the All tab is selected and the Azure Blob Storage item is highlighted.](media/newdataset_azureblobstorage.png)
+
+5. On the **Select format** blade, select **CSV Delimited Text**. Select **Continue**.
+
+    ![On the Select format blade the CSV Delimited Text item is highlighted.](media/newdataset_selectfileformat_csv.png)
+
+6. On the **Set properties** blade, set the fields to the following values, then select **OK**.
+
+   | Field | Value |
+   |-------|-------|
+   | Name  | Enter **asamcw_customerinfo_csv** |
+   | Linked service | Select **solliancepublicdata**.|
+   | File Path - Container | Enter **wwi-02** |
+   | File Path - Directory | Enter **customer-info** |
+   | File Path - File | Enter **customerinfo.csv** |
+   | First row as header | Checked |
+   | Import schema | Select **From connection/store** |
+
+    ![The Set properties form is displayed with the values specified in the previous table.](media/customerinfodatasetpropertiesform.png)
+
+7. Now we will need to define the destination dataset for our data. In this case we will be storing customer information data in our SQL Pool. On the **Data** blade, expand the **+** button just as you did in **Step 3**.
+
+8. On the **New dataset** blade, with the **Azure** tab selected, enter **synapse** as a search term and select the **Azure Synapse Analytics (formerly SQL DW)** item. Select **Continue**.
+
+    ![On the New dataset blade, synapse is entered as the search term and Azure Synapse Analytics (formerly SQL DW) is selected from the filtered results.](media/newdataset_synapseitem.png)
+  
+9. On the **Set properties** blade, set the field values to the following, then select **OK**.
+
+   | Field | Value |
+   |-------|-------|
+   | Name  | Enter **asamcw_customerinfo_asa** |
+   | Linked service | Select `SQLPool01`. |
+   | Table name | Select **wwi_mcw.CustomerInfo**. |  
+   | Import schema | Select **From connection/store** |
+
+    ![The Set properties blade is populated with the values specified in the preceding table.](media/dataset_customerinfoasaform.png)
+  
+10. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to commit the changes.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+11. Next, we will define a pipeline to populate data into the CustomerInfo table. From the left menu, select **Orchestrate**. From the Orchestrate blade, select the **+** button and select the **Pipeline** item.
+
+    ![The Orchestrate menu item is selected from the left menu. On the Orchestrate blade, the + button is expanded with the Pipeline item highlighted.](media/orchestrate_newpipelinemenu.png)
+
+12. In the bottom pane, on the **General** tab, enter **ASAMCW - Exercise 2 - Copy Customer Information** in the **Name** field.
+
+    ![The General tab is shown with the name field populated as described above.](media/pipeline_customerinfo_generaltab.png)
+
+13. In the **Activities** menu, expand the **Move & transform** item. Drag an instance of the **Copy data** activity to the design surface of the pipeline.
+
+    ![In the Activities menu, the Move and transform section is expanded. An arrow denotes an instance of the Copy data activity being dragged over to the design surface of the pipeline.](media/pipeline_addcopydataactivity.png)
+
+14. Select the **Copy data** activity on the pipeline design surface. In the bottom pane, on the **General** tab, enter **Copy Customer Information Data** in the **Name** field.
+
+    ![The General tab is selected with the Name field set to Copy Customer Information Data.](media/pipeline_copycustomerinformation_general.png)
+
+15. Select the **Source** tab in the bottom pane. In the **Source dataset** field, select **asamcw_customerinfo_csv**.
+
+    ![The Source tab is selected with the Source dataset field set to asamcw_customerinfo_csv.](media/pipeline_copycustomerinformation_source.png)
+  
+16. Select the **Sink** tab in the bottom pane. In the **Sink dataset** field, select **asamcw_customerinfo_asa**, for the **Copy method** field, select **Bulk insert**, and for **Pre-copy script** enter:
+
+    ```sql
+      truncate table wwi_mcw.CustomerInfo
+    ```
+
+    ![The Sink tab is selected with the Sink dataset field set to asamcw_customerinfo_asa, the Copy method set to Bulk insert, and the Pre-copy script field set to the previous query.](media/pipeline_copycustomerinformation_sink.png)
+  
+17. Select the **Mapping** tab in the bottom pane. Select the **Import schemas** button. You will notice that Azure Synapse Analytics automated the mapping for us since the field names and types match.
+
+    ![The Mapping tab is selected in the bottom pane. The source to destination field mapping is shown.](media/pipeline_copycustomerinformation_mapping.png)
+
+18. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to commit the changes.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+19. Once published, expand the **Add trigger** item on the pipeline designer toolbar, and select **Trigger now**. In the **Pipeline run** blade, select **OK** to proceed with the latest published configuration. You will see notification toast windows indicating the pipeline is running and when it has completed.
+
+20. View the status of the completed run by locating the **ASAMCW - Exercise 2 - Copy Customer Information** pipeline in the Orchestrate blade. Expand the actions menu, and select the **Monitor** item.
+
+    ![In the Orchestrate blade, the Action menu is displayed with the Monitor item selected on the ASAMCW - Exercise 2 - Copy Customer Information pipeline.](media/pipeline_copycustomerinformation_monitormenu.png)
+  
+21. You should see a successful run of the pipeline we created in the **Pipeline runs** table.
+  
+    ![On the pipeline runs screen, a successful pipeline run is highlighted in the table.](media/pipeline_run_customerinfo_successful.png)
+
+22. Verify the table has populated by creating a new query. Remember from **Task 1**, select the **Develop** item from the left menu, and in the **Develop** blade, expand the **+** button, and select **SQL script**. In the query window, be sure to connect to the SQL Pool database (`SQLPool01`), then paste and run the following query. When complete, select the **Discard all** button from the top toolbar.
+
+  ```sql
+    select * from wwi_mcw.CustomerInfo;
+  ```
+  
+### Task 3: Create the campaign analytics table
+
+1. Create the campaign analytics table
 
     ```sql
     CREATE TABLE [wwi_mcw].[CampaignAnalytics]
@@ -195,6 +285,7 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
         [Country] [nvarchar](30)  NOT NULL,
         [ProductCategory] [nvarchar](50)  NOT NULL,
         [CampaignName] [nvarchar](500)  NOT NULL,
+        [Analyst] [nvarchar](20) NOT NULL,
         [Revenue] [decimal](10,2)  NULL,
         [RevenueTarget] [decimal](10,2)  NULL,
         [City] [nvarchar](50)  NULL,
@@ -204,50 +295,116 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
     (
         DISTRIBUTION = HASH ( [Region] ),
         CLUSTERED COLUMNSTORE INDEX
-    )
+    );  
     ```
-  
-3. Create the sale table
 
-  ```sql
-    CREATE TABLE [wwi_mcw].[SaleSmall]
-    (
-      [TransactionId] [uniqueidentifier]  NOT NULL,
-      [CustomerId] [int]  NOT NULL,
-      [ProductId] [smallint]  NOT NULL,
-      [Quantity] [tinyint]  NOT NULL,
-      [Price] [decimal](9,2)  NOT NULL,
-      [TotalAmount] [decimal](9,2)  NOT NULL,
-      [TransactionDateId] [int]  NOT NULL,
-      [ProfitAmount] [decimal](9,2)  NOT NULL,
-      [Hour] [tinyint]  NOT NULL,
-      [Minute] [tinyint]  NOT NULL,
-      [StoreId] [smallint]  NOT NULL
-    )
-    WITH
-    (
-      DISTRIBUTION = HASH ( [CustomerId] ),
-      CLUSTERED COLUMNSTORE INDEX,
-      PARTITION
+### Task 4: Populate the campaign analytics table
+
+### Task 5: Create the sale table
+
+Over the past 5 years, Wide World Importers has amassed over 3 billion rows of sales data. With this quantity of data, the storage consumed would be greater than 2 GB. While we will be using only a subset of this data for the lab, we will design the table for the production environment. Using the guidance outlined in the current Exercise description, we can ascertain that we will need a **Clustered Columnstore** table with a **Hash** table distribution based on the **CustomerId** field which will be used in most queries. For further performance gains, the table will be partitioned by transaction date to ensure queries that include dates or date arithmetic are returned in a favorable amount of time.
+
+1. Expand the left menu and select the **Develop** item. From the **Develop** blade, expand the **+** button and select the **SQL script** item.
+
+    ![The left menu is expanded with the Develop item selected. The Develop blade has the + button expanded with the SQL script item highlighted.](media/develop_newsqlscript_menu.png)
+
+2. In the query tab toolbar menu, ensure you connect to your SQL Pool, `SQLPool01`.
+
+    ![The query tab toolbar menu is displayed with the Connect to set to the SQL Pool.](media/querytoolbar_connecttosqlpool.png)
+
+3. In the query window, copy and paste the following query to create the customer information table. Then select the **Run** button in the query tab toolbar.
+
+    ```sql
+      CREATE TABLE [wwi_mcw].[SaleSmall]
       (
-        [TransactionDateId] RANGE RIGHT FOR VALUES (
-          20100101, 20100201, 20100301, 20100401, 20100501, 20100601, 20100701, 20100801, 20100901, 20101001, 20101101, 20101201, 
-          20110101, 20110201, 20110301, 20110401, 20110501, 20110601, 20110701, 20110801, 20110901, 20111001, 20111101, 20111201, 
-          20120101, 20120201, 20120301, 20120401, 20120501, 20120601, 20120701, 20120801, 20120901, 20121001, 20121101, 20121201, 
-          20130101, 20130201, 20130301, 20130401, 20130501, 20130601, 20130701, 20130801, 20130901, 20131001, 20131101, 20131201, 
-          20140101, 20140201, 20140301, 20140401, 20140501, 20140601, 20140701, 20140801, 20140901, 20141001, 20141101, 20141201, 
-          20150101, 20150201, 20150301, 20150401, 20150501, 20150601, 20150701, 20150801, 20150901, 20151001, 20151101, 20151201, 
-          20160101, 20160201, 20160301, 20160401, 20160501, 20160601, 20160701, 20160801, 20160901, 20161001, 20161101, 20161201, 
-          20170101, 20170201, 20170301, 20170401, 20170501, 20170601, 20170701, 20170801, 20170901, 20171001, 20171101, 20171201, 
-          20180101, 20180201, 20180301, 20180401, 20180501, 20180601, 20180701, 20180801, 20180901, 20181001, 20181101, 20181201, 
-          20190101, 20190201, 20190301, 20190401, 20190501, 20190601, 20190701, 20190801, 20190901, 20191001, 20191101, 20191201)
+        [TransactionId] [uniqueidentifier]  NOT NULL,
+        [CustomerId] [int]  NOT NULL,
+        [ProductId] [smallint]  NOT NULL,
+        [Quantity] [tinyint]  NOT NULL,
+        [Price] [decimal](9,2)  NOT NULL,
+        [TotalAmount] [decimal](9,2)  NOT NULL,
+        [TransactionDateId] [int]  NOT NULL,
+        [ProfitAmount] [decimal](9,2)  NOT NULL,
+        [Hour] [tinyint]  NOT NULL,
+        [Minute] [tinyint]  NOT NULL,
+        [StoreId] [smallint]  NOT NULL
       )
-    )
-  ```
+      WITH
+      (
+        DISTRIBUTION = HASH ( [CustomerId] ),
+        CLUSTERED COLUMNSTORE INDEX,
+        PARTITION
+        (
+          [TransactionDateId] RANGE RIGHT FOR VALUES (
+            20180101, 20180201, 20180301, 20180401, 20180501, 20180601, 20180701, 20180801, 20180901, 20181001, 20181101, 20181201,
+            20190101, 20190201, 20190301, 20190401, 20190501, 20190601, 20190701, 20190801, 20190901, 20191001, 20191101, 20191201)
+        )
+      );
+    ```
+
+4. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
+  
+### Task 5 - Populate the sale table
+
+The data that we will be retrieving to populate the sale table is currently stored as a series of parquet files in the **solliancepublicdata** public blob storage account. This storage account has already been added as a linked service in Azure Synapse Analytics when the environment was provisioned. The sale data for each day is stored in a separate parquet file which is placed in storage following a known convention. In this lab, we are interested in populating the Sale table with only 2018 and 2019 data.
+
+> **Note**: The current folder structure for daily sales data is as follows: /wwi-02/sale-small/Year-`YYYY`/Quarter=`Q#`/Month=`M`/Day=`YYYYMMDD` - where `YYYY` is the 4 digit year (eg. 2019), `Q#` represents the quarter (eg. Q1), `M` represents the numerical month (eg. 1 for January) and finally `YYYYMMDD` represents a numeric date format representation (eg. `20190516` for May 16, 2019). A single parquet file is stored each day folder with the name **sale-small-YYYYMMDD-snappy.parquet** (replacing `YYYYMMDD` with the numeric date representation).
+
+1. Similar to how we've done it before, create a new Dataset by selecting **Data** from the left menu, expanding the **+** button on the Data blade and selecting **Dataset**. We will be creating a dataset that will point to the root folder of the sales data in the public storage account.
+
+2. In the **New dataset** blade, with the **All** tab selected, choose the **Azure Blob Storage** item. Select **Continue**.
+
+3. In the **Select format** screen, choose the **Parquet** item. Select **Continue**.
+
+    ![In the Select format screen, the Parquet item is highlighted.](media/dataset_format_parquet.png)
+
+4. In the **Set properties** blade, populate the form as follows then select **OK**.
+  
+   | Field | Value |
+   |-------|-------|
+   | Name  | Enter **asamcw_sales_parquet** |
+   | Linked service | Select **solliancepublicdata** |
+   | File path - Container | Enter **wwi-02** |  
+   | File path - Folder | Enter **sale-small** |
+   | Import schema | Select **From connection/store** |
+
+    ![The Set properties blade is displayed with fields populated with the values from the preceding table.](media/dataset_salesparquet_propertiesform.png)
+
+5. Now we will need to define the destination dataset for our data. In this case we will be storing sale data in our SQL Pool. Create a new dataset by expanding the **+** button on the **Data** blade and selecting **Dataset**.
+
+6. On the **New dataset** blade, with the **Azure** tab selected, enter **synapse** as a search term and select the **Azure Synapse Analytics (formerly SQL DW)** item. Select **Continue**.
+  
+7. On the **Set properties** blade, set the field values to the following, then select **OK**.
+
+   | Field | Value |
+   |-------|-------|
+   | Name  | Enter **asamcw_sale_asa** |
+   | Linked service | Select `SQLPool01`. |
+   | Table name | Select **wwi_mcw.SaleSmall**. |  
+   | Import schema | Select **From connection/store** |
+
+    ![The Set properties blade is populated with the values specified in the preceding table.](media/dataset_saleasaform.png)
+  
+8. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to deploy the changes to the workspace.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+9. Since we want to filter on multiple sale year folders (Year=2018 and Year=2019) and copy only the 2018 and 2019 sales data, we will need to create a data flow to define the specific data that we wish to retrieve from our source dataset. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
+
+    ![From the left menu, the Develop item is selected. From the Develop blade the + button is expanded with the Data flow item highlighted.](media/develop_newdataflow_menu.png)
+
+10. In the lower pane on the **General** tab, name the data flow by entering **ASAMCW - Exercise 2 - 2018 and 2019 Sales** in the **Name** field.
+
+    ![The General tab is displayed with ASAMCW - Exercise 2 - 2018 and 2019 Sales entered as the name of the data flow.](media/dataflow_generaltab_name.png)
+
+11. In the data flow designer window, select the **Add Source** box.
+12. 
 
 ## Exercise 5 - Security
 
-It is important to identify data columns of that hold sensitive information. Types of sensitive could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
+It is important to identify data columns of that hold sensitive information. Types of sensitive information could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
 
 ### Task 1 - Column level security
 
@@ -404,7 +561,7 @@ It is important to identify data columns of that hold sensitive information. Typ
     ALTER TABLE wwi_mcw.CustomerInfo
     ALTER COLUMN Email ADD MASKED WITH (FUNCTION = 'email()');
     GO
-    -- The columns are sucessfully masked.
+    -- The columns are successfully masked.
 
     -- Step:4 Let's see Dynamic Data Masking (DDM) applied on the two columns.
     SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  
