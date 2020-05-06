@@ -1,7 +1,7 @@
 ![](https://github.com/Microsoft/MCW-Template-Cloud-Workshop/raw/master/Media/ms-cloud-workshop.png "Microsoft Cloud Workshops")
 
 <div class="MCWHeader1">
-[Insert workshop name here]
+Azure Synapse Analytics end-to-end solution
 </div>
 
 <div class="MCWHeader2">
@@ -9,7 +9,7 @@ Before the hands-on lab setup guide
 </div>
 
 <div class="MCWHeader3">
-[Insert date here Month Year]
+May 2020
 </div>
 
 
@@ -19,7 +19,7 @@ Microsoft may have patents, patent applications, trademarks, copyrights, or othe
 
 The names of manufacturers, products, or URLs are provided for informational purposes only and Microsoft makes no representations and warranties, either expressed, implied, or statutory, regarding these manufacturers or the use of the products with any Microsoft technologies. The inclusion of a manufacturer or product does not imply endorsement of Microsoft of the manufacturer or product. Links may be provided to third party sites. Such sites are not under the control of Microsoft and Microsoft is not responsible for the contents of any linked site or any link contained in a linked site, or any changes or updates to such sites. Microsoft is not responsible for webcasting or any other form of transmission received from any linked site. Microsoft is providing these links to you only as a convenience, and the inclusion of any link does not imply endorsement of Microsoft of the site or the products contained therein.
 
-© 2019 Microsoft Corporation. All rights reserved.
+© 2020 Microsoft Corporation. All rights reserved.
 
 Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/Usage/General.aspx> are trademarks of the Microsoft group of companies. All other trademarks are property of their respective owners.
 
@@ -27,19 +27,20 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [\[insert workshop name here\] before the hands-on lab setup guide](#\insert-workshop-name-here\-before-the-hands-on-lab-setup-guide)
-    - [Requirements](#requirements)
-    - [Before the hands-on lab](#before-the-hands-on-lab)
-        - [Task 1: Task name](#task-1-task-name)
-        - [Task 2: Task name](#task-2-task-name)
+- [Azure Synapse Analytics end-to-end solution before the hands-on lab setup guide](#azure-synapse-analytics-end-to-end-solution-before-the-hands-on-lab-setup-guide)
+  - [Requirements](#requirements)
+  - [Before the hands-on lab](#before-the-hands-on-lab)
+    - [Task 1: Create Azure Synapse Analytics workspace](#task-1-create-azure-synapse-analytics-workspace)
+    - [Task 2: Create SQL pool](#task-2-create-sql-pool)
+    - [Task 2: Create SQL users](#task-2-create-sql-users)
 
 <!-- /TOC -->
 
-# \[insert workshop name here\] before the hands-on lab setup guide 
+# Azure Synapse Analytics end-to-end solution before the hands-on lab setup guide 
 
 ## Requirements
 
-1.  Number and insert your custom workshop content here . . . 
+1. Number and insert your custom workshop content here . . . 
 
 ## Before the hands-on lab
 
@@ -47,7 +48,7 @@ Duration: X minutes
 
 \[insert your custom workshop content here . . . 
 
-### Task 1: Task name
+### Task 1: Create Azure Synapse Analytics workspace
 
 1.  Number and insert your custom workshop content here . . . 
 
@@ -55,7 +56,14 @@ Duration: X minutes
 
         -  
 
-### Task 2: Task name
+### Task 2: Create SQL pool
+
+1.  Number and insert your custom workshop content here . . . 
+    -  Insert content here
+
+
+
+### Task 2: Create SQL users
 
 1.  Number and insert your custom workshop content here . . . 
     -  Insert content here
