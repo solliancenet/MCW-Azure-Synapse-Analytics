@@ -120,7 +120,7 @@ Table design performance considerations
 | Clustered Index | large lookup tables (> 100 million rows) where querying will only result in a single row returned |
 | Clustered Index + non-clustered secondary index | large tables (> 100 million rows) when single (or very few) records are being returned in queries |
 
-| Table Distribution | Recommended use |
+| Table Distribution/Partition Type | Recommended use |
 |--------------------|-------------|
 | Hash distribution | tables that are larger than 2 GBs with infrequent insert/update/delete operations, works well for large fact tables in a star schema |
 | Round robin distribution | default distribution, when little is known about the data or how it will be used. Use this distribution for staging tables |
@@ -185,11 +185,32 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
     )
     GO
    ```
+
+2. Create the campaign analytics table
+
+    ```sql
+    CREATE TABLE [wwi_mcw].[CampaignAnalytics]
+    (
+        [Region] [nvarchar](50)  NOT NULL,
+        [Country] [nvarchar](30)  NOT NULL,
+        [ProductCategory] [nvarchar](50)  NOT NULL,
+        [CampaignName] [nvarchar](500)  NOT NULL,
+        [Revenue] [decimal](10,2)  NULL,
+        [RevenueTarget] [decimal](10,2)  NULL,
+        [City] [nvarchar](50)  NULL,
+        [State] [nvarchar](25)  NULL
+    )
+    WITH
+    (
+        DISTRIBUTION = HASH ( [Region] ),
+        CLUSTERED COLUMNSTORE INDEX
+    )
+    ```
   
-2. Create the sale table
+3. Create the sale table
 
   ```sql
-    CREATE TABLE [wwi].[SaleSmall]
+    CREATE TABLE [wwi_mcw].[SaleSmall]
     (
       [TransactionId] [uniqueidentifier]  NOT NULL,
       [CustomerId] [int]  NOT NULL,
@@ -231,16 +252,16 @@ It is important to identify data columns of that hold sensitive information. Typ
 ### Task 1 - Column level security
 
   ```sql
-      /*  Column-level security feature in Azure Synapse simplifies the design and coding of security in application.
+      /*  Column-level security feature in Azure Synapse simplifies the design and coding of security in applications.
         It ensures column level security by restricting column access to protect sensitive data. */
 
     /* Scenario: In this scenario we will be working with two users. The first one is the CEO, he has access to all
         data. The second one is DataAnalystMiami, this user doesn't have access to the confidential Revenue column
-        in the Sales table. Follow this lab, one step at a time to see how Column-level security removes access to the
+        in the CampaignAnalytics table. Follow this lab, one step at a time to see how Column-level security removes access to the
         Revenue column to DataAnalystMiami */
 
-    --Step 1: Let us see how this feature in Azure Synapse works. Before that let us have a look at the Campaign table.
-    select  Top 100 * from wwi_Security.Sale
+    --Step 1: Let us see how this feature in Azure Synapse works. Before that let us have a look at the Campaign Analytics table.
+    select  Top 100 * from wwi_mcw.CampaignAnalytics
     where City is not null and state is not null
 
     /*  Consider a scenario where there are two users.
@@ -253,30 +274,30 @@ It is important to identify data columns of that hold sensitive information. Typ
 
 
     -- Step:3 Now let us enforcing column level security for the DataAnalystMiami.
-    /*  The Sales table in the warehouse has information like ProductID, Analyst, Product, CampaignName, Quantity, Region, State, City, RevenueTarget and Revenue.
+    /*  The CampaignAnalytics table in the warehouse has information like ProductID, Analyst, CampaignName, Quantity, Region, State, City, RevenueTarget and Revenue.
         The Revenue generated from every campaign is classified and should be hidden from DataAnalystMiami.
     */
 
-    REVOKE SELECT ON wwi_security.Sale FROM DataAnalystMiami;
-    GRANT SELECT ON wwi_security.Sale([ProductID], [Analyst], [Product], [CampaignName],[Quantity], [Region], [State], [City], [RevenueTarget]) TO DataAnalystMiami;
+    REVOKE SELECT ON wwi_mcw.CampaignAnalytics FROM DataAnalystMiami;
+    GRANT SELECT ON wwi_mcw.CampaignAnalytics([ProductID], [Analyst], [Product], [CampaignName],[Quantity], [Region], [State], [City], [RevenueTarget]) TO DataAnalystMiami;
     -- This provides DataAnalystMiami access to all the columns of the Sale table but Revenue.
 
     -- Step:4 Then, to check if the security has been enforced, we execute the following query with current User As 'DataAnalystMiami', this will result in an error
     --  since DataAnalystMiami doesn't have select access to the Revenue column
     EXECUTE AS USER ='DataAnalystMiami';
-    select TOP 100 * from wwi_security.Sale;
+    select TOP 100 * from wwi_mcw.CampaignAnalytics;
     ---
     -- The following query will succeed since we are not including the Revenue column in the query.
     EXECUTE AS USER ='DataAnalystMiami';
-    select [ProductID], [Analyst], [Product], [CampaignName],[Quantity], [Region], [State], [City], [RevenueTarget] from wwi_security.Sale;
+    select [ProductID], [Analyst], [Product], [CampaignName],[Quantity], [Region], [State], [City], [RevenueTarget] from wwi_mcw.CampaignAnalytics;
 
     -- Step:5 Whereas, the CEO of the company should be authorized with all the information present in the warehouse.To do so, we execute the following query.
     Revert;
-    GRANT SELECT ON wwi_security.Sale TO CEO;  --Full access to all columns.
+    GRANT SELECT ON wwi_mcw.CampaignAnalytics TO CEO;  --Full access to all columns.
 
     -- Step:6 Let us check if our CEO user can see all the information that is present. Assign Current User As 'CEO' and the execute the query
     EXECUTE AS USER ='CEO'
-    select * from wwi_security.Sale
+    select * from wwi_mcw.CampaignAnalytics
     Revert;
   ```
 
@@ -291,15 +312,14 @@ It is important to identify data columns of that hold sensitive information. Typ
   -- Step:1 The Sale table has two Analyst values: DataAnalystMiami and DataAnalystSanDiego. 
   --     Each analyst has jurisdiction across a specific Region. DataAnalystMiami on the South East Region
   --      and DataAnalystSanDiego on the Far West region.
-  SELECT DISTINCT Analyst, Region FROM wwi_security.Sale order by Analyst ;
+  SELECT DISTINCT Analyst, Region FROM wwi_mcw.CampaignAnalytics order by Analyst ;
 
   /* Scenario: WWI requires that an Analyst only see the data for their own data from their own region. The CEO should see ALL data.
       In the Sale table, there is an Analyst column that we can use to filter data to a specific Analyst value. */
 
   /* We will define this filter using what is called a Security Predicate. This is an inline table-valued function that allows
       us to evaluate additional logic, in this case determining if the Analyst executing the query is the same as the Analyst
-      specified in the Analyst column in the row. The function returns 1 (will return the row) when a row in the Analyst column is the same as the 
-      user executing the query (@Analyst = USER_NAME()) or if the user executing the query is the CEO user (USER_NAME() = 'CEO')
+      specified in the Analyst column in the row. The function returns 1 (will return the row) when a row in the Analyst column is the same as the user executing the query (@Analyst = USER_NAME()) or if the user executing the query is the CEO user (USER_NAME() = 'CEO')
       whom has access to all data.
   */
 
@@ -321,27 +341,27 @@ It is important to identify data columns of that hold sensitive information. Typ
   -- Now we define security policy that adds the filter predicate to the Sale table. This will filter rows based on their login name.
   CREATE SECURITY POLICY SalesFilter  
   ADD FILTER PREDICATE Security.fn_securitypredicate(Analyst)
-  ON wwi_security.Sale
+  ON wwi_mcw.CampaignAnalytics
   WITH (STATE = ON);
 
   ------ Allow SELECT permissions to the Sale Table.------
-  GRANT SELECT ON wwi_security.Sale TO CEO, DataAnalystMiami, DataAnalystSanDiego;
+  GRANT SELECT ON wwi_mcw.CampaignAnalytics TO CEO, DataAnalystMiami, DataAnalystSanDiego;
 
   -- Step:3 Let us now test the filtering predicate, by selecting data from the Sale table as 'DataAnalystMiami' user.
-  EXECUTE AS USER = 'DataAnalystMiami' 
-  SELECT * FROM wwi_security.Sale;
+  EXECUTE AS USER = 'DataAnalystMiami'
+  SELECT * FROM wwi_mcw.CampaignAnalytics;
   revert;
   -- As we can see, the query has returned rows here Login name is DataAnalystMiami
 
   -- Step:4 Let us test the same for  'DataAnalystSanDiego' user.
-  EXECUTE AS USER = 'DataAnalystSanDiego'; 
-  SELECT * FROM wwi_security.Sale;
+  EXECUTE AS USER = 'DataAnalystSanDiego';
+  SELECT * FROM wwi_mcw.CampaignAnalytics;
   revert;
   -- RLS is working indeed.
 
   -- Step:5 The CEO should be able to see all rows in the table.
   EXECUTE AS USER = 'CEO';  
-  SELECT * FROM wwi_security.Sale;
+  SELECT * FROM wwi_mcw.CampaignAnalytics;
   revert;
   -- And he can.
 
@@ -366,7 +386,7 @@ It is important to identify data columns of that hold sensitive information. Typ
         obfuscate the CreditCard and Email columns of the CustomerInfo table to DataAnalysts */
 
     -- Step:1 Let us first get a view of CustomerInfo table.
-    SELECT TOP (100) * FROM wwi_security.CustomerInfo;
+    SELECT TOP (100) * FROM wwi_mcw.CustomerInfo;
 
     -- Step:2 Let's confirm that there are no Dynamic Data Masking (DDM) applied on columns.
     SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  
@@ -378,10 +398,10 @@ It is important to identify data columns of that hold sensitive information. Typ
     -- No results returned verify that no data masking has been done yet.
 
     -- Step:3 Now lets mask 'CreditCard' and 'Email' Column of 'CustomerInfo' table.
-    ALTER TABLE wwi_security.CustomerInfo  
+    ALTER TABLE wwi_mcw.CustomerInfo  
     ALTER COLUMN [CreditCard] ADD MASKED WITH (FUNCTION = 'partial(0,"XXXX-XXXX-XXXX-",4)');
     GO
-    ALTER TABLE wwi_security.CustomerInfo
+    ALTER TABLE wwi_mcw.CustomerInfo
     ALTER COLUMN Email ADD MASKED WITH (FUNCTION = 'email()');
     GO
     -- The columns are sucessfully masked.
@@ -395,25 +415,25 @@ It is important to identify data columns of that hold sensitive information. Typ
         AND tbl.name ='CustomerInfo';
 
     -- Step:5 Now, let us grant SELECT permission to 'DataAnalystMiami' on the 'CustomerInfo' table.
-   GRANT SELECT ON wwi_security.CustomerInfo TO DataAnalystMiami;  
+   GRANT SELECT ON wwi_mcw.CustomerInfo TO DataAnalystMiami;  
 
     -- Step:6 Logged in as  'DataAnalystMiami' let us execute the select query and view the result.
     EXECUTE AS USER = 'DataAnalystMiami';  
-    SELECT * FROM wwi_security.CustomerInfo;
+    SELECT * FROM wwi_mcw.CustomerInfo;
 
     -- Step:7 Let us remove the data masking using UNMASK permission
     GRANT UNMASK TO DataAnalystMiami;
     EXECUTE AS USER = 'DataAnalystMiami';  
     SELECT *
-    FROM wwi_security.CustomerInfo;
+    FROM wwi_mcw.CustomerInfo;
     revert;
     REVOKE UNMASK TO DataAnalystMiami;  
 
     ----step:8 Reverting all the changes back to as it was.
-    ALTER TABLE wwi_security.CustomerInfo
+    ALTER TABLE wwi_mcw.CustomerInfo
     ALTER COLUMN CreditCard DROP MASKED;
     GO
-    ALTER TABLE wwi_security.CustomerInfo
+    ALTER TABLE wwi_mcw.CustomerInfo
     ALTER COLUMN Email DROP MASKED;
     GO
 ```
