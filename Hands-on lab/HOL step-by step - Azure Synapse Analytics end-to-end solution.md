@@ -37,22 +37,21 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 1: Launching Synapse Studio](#task-1-launching-synapse-studio)
   - [Exercise 2: Create and populate the supporting tables in the SQL Pool](#exercise-2-create-and-populate-the-supporting-tables-in-the-sql-pool)
     - [Task 1: Create the customer information table](#task-1-create-the-customer-information-table)
-    - [Task 2 - Populate the customer information table](#task-2---populate-the-customer-information-table)
+    - [Task 2: Populate the customer information table](#task-2-populate-the-customer-information-table)
     - [Task 3: Create the campaign analytics table](#task-3-create-the-campaign-analytics-table)
     - [Task 4: Populate the campaign analytics table](#task-4-populate-the-campaign-analytics-table)
     - [Task 5: Create the sale table](#task-5-create-the-sale-table)
-    - [Task 5 - Populate the sale table](#task-5---populate-the-sale-table)
-  - [Exercise 5 - Security](#exercise-5---security)
-    - [Task 1 - Column level security](#task-1---column-level-security)
-    - [Task 2 - Row level security](#task-2---row-level-security)
-    - [Task 3 - Dynamic data masking](#task-3---dynamic-data-masking)
-  - [Exercise 7 - Monitoring](#monitoring)	
-    - [Task 1 - Workload Importance](#task-1-workload-importance)	
-    - [Task 2 - Workload Isolation](#task-2-workload-isolation)	
-    - [Task 3 - Monitoring with Dynamic Management Views](#task-3-monitoring-with-dynamic-management-views)	
-    - [Task 4 - Orchestration Monitoring with the Monitor Hub](#task-4-orchestration-monitoring-with-the-monitor-hub)	
-    - [Task 5 - Monitoring SQL Requests with the Monitor Hub](#task-5-monitoring-sql-requests-with-the-monitor-hub)
-    
+    - [Task 6: Populate the sale table](#task-6-populate-the-sale-table)
+  - [Exercise 5: Security](#exercise-5-security)
+    - [Task 1: Column level security](#task-1-column-level-security)
+    - [Task 2: Row level security](#task-2-row-level-security)
+    - [Task 3: Dynamic data masking](#task-3-dynamic-data-masking)
+  - [Exercise 7: Monitoring](#exercise-7-monitoring)
+    - [Task 1: Workload Importance](#task-1-workload-importance)
+    - [Task 2: Workload Isolation](#task-2-workload-isolation)
+    - [Task 3: Monitoring with Dynamic Management Views](#task-3-monitoring-with-dynamic-management-views)
+    - [Task 4: Orchestration Monitoring with the Monitor Hub](#task-4-orchestration-monitoring-with-the-monitor-hub)
+    - [Task 5: Monitoring SQL Requests with the Monitor Hub](#task-5-monitoring-sql-requests-with-the-monitor-hub)
   - [After the hands-on lab](#after-the-hands-on-lab)
 <!-- /TOC -->
 
@@ -174,7 +173,7 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
 
    ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
 
-### Task 2 - Populate the customer information table
+### Task 2: Populate the customer information table
 
 1. The data that we will be retrieving to populate the customer information table is currently stored in CSV format in a public blob storage container. The storage account that possesses this data has already been added as a linked service in Azure Synapse Analytics when the environment was provisioned.  Linked Services are synonymous with connection strings in Azure Synapse Analytics. Azure Synapse Analytics linked services provides the ability to connect to nearly 100 different types of external services ranging from Azure Storage Accounts to Amazon S3 and more. Review the presence of the **solliancepublicdata** linked service, by selecting **Manage** from the left menu, and selecting **Linked services** from the blade menu. Filter the linked services by the term **solliance** to find the **solliancepublicdata** item. Further investigating this item will unveil that it makes a connection to the storage account using a storage account key.
   
@@ -353,11 +352,17 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
 
    ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
   
-### Task 5 - Populate the sale table
+### Task 6: Populate the sale table
 
 The data that we will be retrieving to populate the sale table is currently stored as a series of parquet files in the **solliancepublicdata** public blob storage account. This storage account has already been added as a linked service in Azure Synapse Analytics when the environment was provisioned. The sale data for each day is stored in a separate parquet file which is placed in storage following a known convention. In this lab, we are interested in populating the Sale table with only 2018 and 2019 data.
 
-> **Note**: The current folder structure for daily sales data is as follows: /wwi-02/sale-small/Year-`YYYY`/Quarter=`Q#`/Month=`M`/Day=`YYYYMMDD` - where `YYYY` is the 4 digit year (eg. 2019), `Q#` represents the quarter (eg. Q1), `M` represents the numerical month (eg. 1 for January) and finally `YYYYMMDD` represents a numeric date format representation (eg. `20190516` for May 16, 2019). A single parquet file is stored each day folder with the name **sale-small-YYYYMMDD-snappy.parquet** (replacing `YYYYMMDD` with the numeric date representation).
+> **Note**: The current folder structure for daily sales data is as follows: /wwi-02/sale-small/Year=`YYYY`/Quarter=`Q#`/Month=`M`/Day=`YYYYMMDD` - where `YYYY` is the 4 digit year (eg. 2019), `Q#` represents the quarter (eg. Q1), `M` represents the numerical month (eg. 1 for January) and finally `YYYYMMDD` represents a numeric date format representation (eg. `20190516` for May 16, 2019).
+> A single parquet file is stored each day folder with the name **sale-small-YYYYMMDD-snappy.parquet** (replacing `YYYYMMDD` with the numeric date representation).
+
+```text
+  Sample path to the parquet folder for January 1st, 2019:
+  /wwi-02/sale-small/Year=2019/Quarter=Q1/Month=1/Day=20190101/sale-small-20190101-snappy.parquet
+```
 
 1. Similar to how we've done it before, create a new Dataset by selecting **Data** from the left menu, expanding the **+** button on the Data blade and selecting **Dataset**. We will be creating a dataset that will point to the root folder of the sales data in the public storage account.
 
@@ -398,7 +403,7 @@ The data that we will be retrieving to populate the sale table is currently stor
 
     ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
 
-9. Since we want to filter on multiple sale year folders (Year=2018 and Year=2019) and copy only the 2018 and 2019 sales data, we will need to create a data flow to define the specific data that we wish to retrieve from our source dataset. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
+9. Since we want to filter on multiple sale year folders (Year=2018 and Year=2019) and copy only the 2018 and 2019 sales data, we will need to create a data flow to define the specific data that we wish to retrieve from our source dataset. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow, start by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
 
     ![From the left menu, the Develop item is selected. From the Develop blade the + button is expanded with the Data flow item highlighted.](media/develop_newdataflow_menu.png)
 
@@ -407,13 +412,55 @@ The data that we will be retrieving to populate the sale table is currently stor
     ![The General tab is displayed with ASAMCW - Exercise 2 - 2018 and 2019 Sales entered as the name of the data flow.](media/dataflow_generaltab_name.png)
 
 11. In the data flow designer window, select the **Add Source** box.
-12. 
 
-## Exercise 5 - Security
+    ![The Add source box is highlighted in the data flow designer window.](media/dataflow_addsourcebox.png)
+
+12. With the added source selected in the designer, in the lower pane with the **Source settings** tab selected, set the **Output stream name** to **salesdata** and for the **Dataset**, select **asamcw_sales_parquet**.
+  
+    ![The Source settings tab is selected displaying the Output stream name set to salesdata and the selected dataset being asamcw_sales_parquet.](media/dataflow_source_sourcesettings.png)
+
+13. Select the **Source options** tab, and add the following as **Wildcard paths**, this will ensure that we only pull data from the parquet files for the sales years of 2018 and 2019:
+
+    1. wwi-02/sale-small/Year=2018/*/*/*/*
+
+    2. wwi-02/sale-small/Year=2019/*/*/*/*
+
+      ![The Source options tab is selected with the above wildcard paths highlighted.](media/dataflow_source_sourceoptions.png)
+
+14. At the bottom right of the **salesdata** source, expand the **+** button and select the **Sink** item located in the **Destination** section of the menu.
+
+      ![The + button is highlighted toward the bottom right of the source element on the data flow designer.](media/dataflow_source_additem.png)
+
+15. In the designer, select the newly added **Sink** element and in the bottom pane with the **Sink** tab selected, fill the form as follows:
+
+    | Field | Value |
+    |-------|-------|
+    | Output stream name  | Enter **sale** |
+    | Incoming stream | Select **salesdata**. |
+    | Dataset | Select **asamcw_sale_asa**. |
+
+    ![The Sink tab is displayed with the form populated with the values from the preceding table.](media/dataflow_sink_sinktab.png)
+
+16. Select the **Mapping** tab and toggle the **Auto mapping** setting to the off position. You will need to add the following input to output column mappings. Add a mapping by selecting the **+ Add mapping** button.
+  
+    | Input column | Output column |
+    |-------|-------|
+    | TransactionDate  | TransactionDateId |
+    | Hour | Hour |
+    | Minute | Minute |
+    | Quantity | Quantity |
+
+    ![The Mapping tab is selected with the Auto mapping toggle set to the off position. The + Add mapping button is highlighted along with the mapping entries specified in the preceding table.](media/dataflow_sink_mapping.png)
+
+17. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to deploy the new data flow to the workspace.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+  
+## Exercise 5: Security
 
 It is important to identify data columns of that hold sensitive information. Types of sensitive information could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
 
-### Task 1 - Column level security
+### Task 1: Column level security
 
   ```sql
       /*  Column-level security feature in Azure Synapse simplifies the design and coding of security in applications.
@@ -465,7 +512,7 @@ It is important to identify data columns of that hold sensitive information. Typ
     Revert;
   ```
 
-### Task 2 - Row level security
+### Task 2: Row level security
 
   ```sql
     /* Row level Security (RLS) in Azure Synapse enables us to use group membership to control access to rows in a table.
@@ -538,7 +585,7 @@ It is important to identify data columns of that hold sensitive information. Typ
   DROP SCHEMA Security;
   ```
 
-### Task 3 - Dynamic data masking
+### Task 3: Dynamic data masking
 
 ```sql
     -------------------------------------------------------------------------Dynamic Data Masking (DDM)----------------------------------------------------------------------------------------------------------
@@ -601,6 +648,7 @@ It is important to identify data columns of that hold sensitive information. Typ
     ALTER COLUMN Email DROP MASKED;
     GO
 ```
+
 ## Exercise 7: Monitoring
 
 ### Task 1: Workload Importance
