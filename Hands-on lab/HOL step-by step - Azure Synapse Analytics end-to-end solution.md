@@ -421,9 +421,9 @@ The data that we will be retrieving to populate the sale table is currently stor
 
 13. Select the **Source options** tab, and add the following as **Wildcard paths**, this will ensure that we only pull data from the parquet files for the sales years of 2018 and 2019:
 
-    1. wwi-02/sale-small/Year=2018/*/*/*/*
+    1. wwi-02/sale-small/Year=2018/\*/\*/\*/\*
 
-    2. wwi-02/sale-small/Year=2019/*/*/*/*
+    2. wwi-02/sale-small/Year=2019/\*/\*/\*/\*
 
       ![The Source options tab is selected with the above wildcard paths highlighted.](media/dataflow_source_sourceoptions.png)
 
@@ -455,7 +455,48 @@ The data that we will be retrieving to populate the sale table is currently stor
 17. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to deploy the new data flow to the workspace.
 
     ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+18. We can now use this data flow as an activity in a pipeline. Create a new pipeline by selecting **Orchestrate** from the left menu, and in the **Orchestrate** blade, expand the **+** button and select **Pipeline**.
+
+19. In the bottom pane, with the **General** tab selected, enter **ASAMCW - Exercise 2 - Copy Sale Data** as the Name of the pipeline.
+
+20. From the **Activities** menu, expand the **Move & transform** section and drag an instance of **Data flow** to the design surface of the pipeline.
   
+    ![The Activities menu of the pipeline is displayed with the Move and transform section expanded. An arrow indicating a drag operation shows adding a Data flow activity to the design surface of the pipeline.](media/pipeline_sales_dataflowactivitymenu.png)
+
+21. With the newly added data flow activity selected in the designer, in the bottom pane with the **General** tab selected, Name the data flow **ASAMCW - Exercise 2 - 2018 and 2019 Sales**.
+
+22. Select the **Settings** tab and set the form fields to the following values:
+
+    | Field | Value |
+    |-------|-------|
+    | Data flow  | Select **ASAMCW - Exercise 2 - 2018 and 2019 Sales** |
+    | Staging linked service | Select `PrimaryStorage`. |
+    | Staging storage folder - Container | Enter **staging** |
+    | Staging storage folder - Folder | Enter **mcwsales** |
+
+    ![The data flow activity Settings tab is displayed with the fields specified in the preceding table highlighted.](media/pipeline_sales_dataflowsettings.png)
+
+23. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to commit the changes.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+24. Once published, expand the **Add trigger** item on the pipeline designer toolbar, and select **Trigger now**. In the **Pipeline run** blade, select **OK** to proceed with the latest published configuration. You will see notification toast windows indicating the pipeline is running and when it has completed.
+
+25. View the status of the pipeline run by locating the **ASAMCW - Exercise 2 - Copy Sale Data** pipeline in the Orchestrate blade. Expand the actions menu, and select the **Monitor** item.
+
+    ![In the Orchestrate blade, the Action menu is displayed with the Monitor item selected on the ASAMCW - Exercise 2 - Copy Sale Data pipeline.](media/orchestrate_pipeline_monitor_copysaledata.png)
+  
+26. You should see a run of the pipeline we created in the **Pipeline runs** table showing as in progress. It will take approximately 45 minutes for this pipeline operation to complete. You will need to refresh this table from time to time to see updated progress. Once it has completed. You should see the pipeline run displayed with a Status of **Succeeded**.
+  
+    ![On the pipeline runs screen, a successful pipeline run is highlighted in the table.](media/pipeline_run_sales_successful.png)
+
+27. Verify the table has populated by creating a new query. Select the **Develop** item from the left menu, and in the **Develop** blade, expand the **+** button, and select **SQL script**. In the query window, be sure to connect to the SQL Pool database (`SQLPool01`), then paste and run the following query. When complete, select the **Discard all** button from the top toolbar.
+
+  ```sql
+    select count(TransactionId) from wwi_mcw.SaleSmall;
+  ```
+
 ## Exercise 5: Security
 
 It is important to identify data columns of that hold sensitive information. Types of sensitive information could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
