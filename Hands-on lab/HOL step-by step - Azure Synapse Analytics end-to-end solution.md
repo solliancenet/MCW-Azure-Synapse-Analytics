@@ -1387,7 +1387,7 @@ All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This
     
 ### Task 4: Orchestration Monitoring with the Monitor Hub
 
-1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Lab 08 - Execute Business Analyst Queries** Pipeline.
+1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Exercise 7 - Execute Business Analyst Queries** Pipeline.
 
     ![The add trigger and trigger now menu items are highlighted.](media/ex7-task4-01.png "Add trigger")
 
@@ -1401,7 +1401,7 @@ All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This
 
 ### Task 5: Monitoring SQL Requests with the Monitor Hub
 
-1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Lab 08 - Execute Business Analyst Queries** Pipeline.
+1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Exercise 7 - Execute Business Analyst Queries** Pipeline.
 
     ![The add trigger and trigger now menu items are highlighted.](media/ex7-task5-01.png "Add trigger")
 
