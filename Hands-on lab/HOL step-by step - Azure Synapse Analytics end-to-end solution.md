@@ -1299,6 +1299,98 @@ Users should avoid a workload management solution that configures 100% workload 
 
 ### Task 3: Monitoring with Dynamic Management Views
 
+Azure Synapse Analytics provides a rich monitoring experience within the Azure portal to surface insights regarding your data warehouse workload. The Azure portal is the recommended tool when monitoring your data warehouse as it provides configurable retention periods, alerts, recommendations, and customizable charts and dashboards for metrics and logs. The portal also enables you to integrate with other Azure monitoring services such as Azure Monitor (logs) with Log analytics to provide a holistic monitoring experience for not only your data warehouse but also your entire Azure analytics platform for an integrated monitoring experience. 
+
+For a programmatic experience when monitoring SQL Analytics via T-SQL, the service provides a set of Dynamic Management Views (DMVs). These views are useful when actively troubleshooting and identifying performance bottlenecks with your workload.
+
+### Task 1 - Monitoring with Dynamic Management Views
+
+For a programmatic experience when monitoring SQL Analytics via T-SQL, the service provides a set of Dynamic Management Views (DMVs). These views are useful when actively troubleshooting and identifying performance bottlenecks with your workload.
+
+All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This DMV contains the last 10,000 logins. The `session_id` is the primary key and is assigned sequentially for each new logon.
+
+1. Navigate to the **Develop** hub.
+
+    ![The Develop menu item is highlighted.](media/develop-hub.png "Develop hub")
+
+2. From the **Develop** menu, select the + button and choose **SQL Script** from the context menu.
+
+    ![The SQL script context menu item is highlighted.](media/synapse-studio-new-sql-script.png "New SQL script")
+
+3. In the toolbar menu, connect to the **SQL Pool** database to execute the query.
+
+    ![The connect to option is highlighted in the query toolbar.](media/synapse-studio-query-toolbar-connect.png "Query toolbar")
+
+4. In the query window, replace the script with the following:
+
+    ```sql
+    SELECT * FROM sys.dm_pdw_exec_sessions where status <> 'Closed' and session_id <> session_id();
+    ```
+
+    All queries executed on SQL pool are logged to `sys.dm_pdw_exec_requests`. This DMV contains the last 10,000 queries executed. The `request_id` uniquely identifies each query and is the primary key for this DMV. The `request_id` is assigned sequentially for each new query and is prefixed with `QID`, which stands for query ID. Querying this DMV for a given `session_id` shows all queries for a given logon.
+
+5. Select **Run** from the toolbar menu to execute the SQL command.
+
+6. Let's flood the system with queries to create operations to monitor. To do this, we will run a Azure Synapse Pipeline which triggers queries. Select the `Orchestrate` Tab. **Run** the **Exercise 7 - Execute Business Analyst Queries** Pipeline, which will run / trigger  `asa.sql.workload02` queries.
+
+7. In the query window, replace the script with the following:
+
+    ```sql
+    SELECT *
+    FROM sys.dm_pdw_exec_requests
+    WHERE status not in ('Completed','Failed','Cancelled')
+      AND session_id <> session_id()
+    ORDER BY submit_time DESC;
+    ```
+
+8. Select **Run** from the toolbar menu to execute the SQL command. You should see a list of sessions in the query results similar to the following. **Note the `Request_ID` of a query** in the results that you would like to investigate (*keep this value in a text editor for a later step*):
+
+    ![Active query results.](media/query-active-requests-results.png "Query results")
+
+9. As an alternative, you can execute the following SQL command to find the top 10 longest running queries.
+
+    ```sql
+    SELECT TOP 10 *
+    FROM sys.dm_pdw_exec_requests
+    ORDER BY total_elapsed_time DESC;
+    ```
+
+10. To simplify the lookup of a query in the `sys.dm_pdw_exec_requests` table, use `LABEL` to assign a comment to your query, which can be looked up in the `sys.dm_pdw_exec_requests` view. To test using the labels, replace the script in the query window with the following:
+
+    ```sql
+    SELECT *
+    FROM sys.tables
+    OPTION (LABEL = 'My Query');
+    ```
+
+11. Select **Run** from the toolbar menu to execute the SQL command.
+
+12. In the query window, replace the script with the following to filter the results with the label, `My Query`.
+
+    ```sql
+    -- Find a query with the Label 'My Query'
+    -- Use brackets when querying the label column, as it it a key word
+    SELECT  *
+    FROM sys.dm_pdw_exec_requests
+    WHERE [label] = 'My Query';
+    ```
+
+13. Select **Run** from the toolbar menu to execute the SQL command. You should see the previously run query in the results view.
+
+14. In the query window, replace the script with the following to retrieve the query's distributed SQL (DSQL) plan from `sys.dm_pdw_request_steps`. **Be sure to replace** the `QID#####` with the `Request_ID` you noted in Step 8:
+
+    ```sql
+    SELECT * FROM sys.dm_pdw_request_steps
+    WHERE request_id = 'QID####'
+    ORDER BY step_index;
+    ```
+
+15. Select **Run** from the toolbar menu to execute the SQL command. You should see results showing the distributed query plan steps for the specified request:
+
+    ![The query results are displayed.](media/sql-dsql-plan-results.png "Query results")
+
+    > When a DSQL plan is taking longer than expected, the cause can be a complex plan with many DSQL steps or just one step taking a long time. If the plan is many steps with several move operations, consider optimizing your table distributions to reduce data movement.
+    
 ### Task 4: Orchestration Monitoring with the Monitor Hub
 
 ### Task 5: Monitoring SQL Requests with the Monitor Hub
