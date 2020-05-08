@@ -43,6 +43,9 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 5: Create the sale table](#task-5-create-the-sale-table)
     - [Task 6: Populate the sale table](#task-6-populate-the-sale-table)
     - [Task 7: Populate the product table](#task-7-populate-the-product-table)
+  - [Exercise 3: Exploring raw data](#exercise-3-exploring-raw-data)
+    - [Task 1: Query sales Parquet data with Synapse SQL Serverless](#task-1-query-sales-parquet-data-with-synapse-sql-serverless)
+    - [Task 2: Query sales Parquet data with Azure Synapse Spark](#task-2-query-sales-parquet-data-with-azure-synapse-spark)
   - [Exercise 5: Security](#exercise-5-security)
     - [Task 1: Column level security](#task-1-column-level-security)
     - [Task 2: Row level security](#task-2-row-level-security)
@@ -306,7 +309,7 @@ The campaign analytics table will be queried primarily for dashboard and KPI pur
         [Country] [nvarchar](30)  NOT NULL,
         [ProductCategory] [nvarchar](50)  NOT NULL,
         [CampaignName] [nvarchar](500)  NOT NULL,
-        [Analyst] [nvarchar](20) NOT NULL,
+        [Analyst] [nvarchar](25) NULL,
         [Revenue] [decimal](10,2)  NULL,
         [RevenueTarget] [decimal](10,2)  NULL,
         [City] [nvarchar](50)  NULL,
@@ -327,7 +330,7 @@ The campaign analytics table will be queried primarily for dashboard and KPI pur
 
 ### Task 4: Populate the campaign analytics table
 
-Similar to the customer information table, we will also be populating the campaign analytics table via a CSV file located in the public storage account. This will require source and sink datasets to point to the CSV file in storage and the campaign analytics table that you just created in the SQL Pool.
+Similar to the customer information table, we will also be populating the campaign analytics table via a CSV file located in the public storage account. This will require source and sink datasets to point to the CSV file in storage and the campaign analytics table that you just created in the SQL Pool. The source CSV file that was received is poorly formatted - we will need to add data transformations to make adjustments to this data before it is imported into the data warehouse.
 
 1. The source dataset will reference the CSV file containing campaign analytics information. From the left menu, select **Data**. From the **Data** blade, expand the **+** button and select **Dataset**.
 
@@ -341,7 +344,7 @@ Similar to the customer information table, we will also be populating the campai
 
     ![On the Select format blade the CSV Delimited Text item is highlighted.](media/newdataset_selectfileformat_csv.png)
 
-4. On the **Set properties** blade, set the fields to the following values, then select **OK**.
+4. On the **Set properties** blade, set the fields to the following values, then select **OK**. You may choose to preview the data which will show a sample of the CSV file. Notice that since we are not setting the first row as the header, the header columns appear as the first row. Also, notice that the city and state values do not appear. This is because of the mismatch in the number of columns in the header row compared to the rest of the file. Soon, we will exclude the first row as we transform the data.
 
    | Field | Value |
    |-------|-------|
@@ -349,8 +352,8 @@ Similar to the customer information table, we will also be populating the campai
    | Linked service | Select **solliancepublicdata**.|
    | File Path - Container | Enter **wwi-02** |
    | File Path - Directory | Enter **campaign-analytics** |
-   | File Path - File | Enter **asamcw_campaignanalytics.csv** |
-   | First row as header | Checked |
+   | File Path - File | Enter **campaignanalytics.csv** |
+   | First row as header | Unchecked |
    | Import schema | Select **From connection/store** |
 
     ![The Set properties form is displayed with the values specified in the previous table.](media/campaignanalyticsdatasetpropertiesform.png)
@@ -376,62 +379,145 @@ Similar to the customer information table, we will also be populating the campai
 
     ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
 
-9. Since our source data does not contain an Analyst column, we will need to create a data flow to transform the source data that will allow us to define the value for the Analyst column to be populated in our destination dataset. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow, start by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
+9. Since our source data is malformed and does not contain an Analyst column, we will need to create a data flow to transform the source data. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow, start by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
 
     ![From the left menu, the Develop item is selected. From the Develop blade the + button is expanded with the Data flow item highlighted.](media/develop_newdataflow_menu.png)
 
-10. In the lower pane on the **General** tab, name the data flow by entering **ASAMCW - Exercise 2 - Campaign Analytics Data** in the **Name** field.
+10. Select the Properties icon on the right side of the dataflow designer toolbar. In the **Properties** blade name the data flow by entering **ASAMCW - Exercise 2 - Campaign Analytics Data** in the **Name** field.
 
-    ![The General tab is displayed with ASAMCW - Exercise 2 - Campaign Analytics Data entered as the name of the data flow.](media/media/dataflow_campaignanalytics_generaltab.png)
+    ![The Properties blade is displayed with ASAMCW - Exercise 2 - Campaign Analytics Data entered as the name of the data flow.](media/dataflow_campaignanalytics_propertiesblade.png)
 
 11. In the data flow designer window, select the **Add Source** box.
 
     ![The Add source box is highlighted in the data flow designer window.](media/dataflow_addsourcebox.png)
 
-12. With the source element selected on the data flow designer, in the bottom pane on the **Source settings** tab, set the **Output stream name** to **campaignanalyticsdata** and select the **asamcw_campaignanalytics_csv** as the **Dataset**.
-
-    ![The Source settings tab is selected with the Output stream name set to campaignanalyticsdata and the Dataset field set to asamcw_campaignanalytics_csv.](media/dataflow_campaignanalytics_sourcesettings.png)
-
-13. Select the **Projection** tab, and change the type for **Revenue** and **RevenueTarget** columns to **Decimal**.
-  
-    ![The Projection tab is shown with the Revenue and RevenueTarget column types set to decimal.](media/dataflow_campaignanalytics_source_projectiontab.png)
-
-14. On the data flow designer, select the **+** button on the lower right corner of the **campaignanalyticsdata** element. From the expanded menu, select **Derived column**.
-
-    ![In the data flow design surface, the + button located on the bottom right of the campaignanalyticsdata source is highlighted.](media/dataflow_campaignanalytics_addstep.png)
-
-15. The derived column that we will be creating will be the Analyst column. The value of this column is set based on the value that is present in the City column of the CSV source file. Every row with the City value of Miami should have the Analyst column populated with **DataAnalystMiami**, and every row with the City value of San Diego should have the Analyst column populated with **DataAnalystSanDiego**. Define this column by selecting the derived column element the design surface, in the bottom pane with the **Derived column's settings** tab selected, fill the form as follows:
+12. Under **Source settings**, configure the following:
 
     | Field | Value |
     |-------|-------|
-    | Output stream name  | Enter **analystcolumn** |
-    | Incoming stream | Select **campaignanalyticsdata**. |
-    | Columns - Name | Enter **Analyst** |  
-    | Columns - Expression | Enter **case(City=="Miami","DataAnalystMiami",case(City=="San Diego", "DataAnalystSanDiego", City))** |
+    | Output stream name  | Enter **campaignanlyticscsv** |
+    | Dataset | Select **asamcw_campaignanalytics_csv**. |
+    | Skip line count | Enter **1** |  
 
-    ![The Derived column's settings tab is displayed with the form populated with the values from the preceding table.](media/dataflow_campaignanalytics_derivedcolumn.png)
+    ![The Source settings tab is displayed with a form populated with the values defined in the preceding table.](media/dataflow_campaignanalytics_sourcesettings.png)
 
-16. On the data flow design surface, expand the **+** button located at the lower right corner of the **analystcolumn** element. Select to add a **Sink**.
+13. When you create data flows, certain features are enabled by turning on debug, such as previewing data and importing a schema (projection). Due to the amount of time it takes to enable this option, as well as environmental constraints of the lab environment, we will bypass these features. The data source has a schema we need to set. To do this, select **Script** from the right side of the dataflow designer toolbar menu.
 
-17. Select the **Sink** element, and in the bottom pane on the **Sink** tab, set the **Output stream name** to **campaignanalytics** and select the **asamcw_campaignanalytics_asa** as the **Dataset**.
+    ![A portion of the dataflow designer toolbar is shown with the Script icon highlighted.](media/dataflow_toolbarscriptmenu.png)
 
-    ![The Sink tab is displayed with the Output stream name set to campaignanalytics and the Dataset set to asamcw_campaignanalytics_asa.](media/dataflow_campaignanalytics_sinktab.png)
+14. Replace the script with the following to provide the column mappings (`output`), then select **OK**:
 
-18. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to commit the changes.
+    ```json
+        source(output(
+            {_col0_} as string,
+            {_col1_} as string,
+            {_col2_} as string,
+            {_col3_} as string,
+            {_col4_} as string,
+            {_col5_} as double,
+            {_col6_} as string,
+            {_col7_} as double,
+            {_col8_} as string,
+            {_col9_} as string
+        ),
+        allowSchemaDrift: true,
+        validateSchema: false,
+        skipLines: 1) ~> campaignanalyticscsv
+    ```
 
-    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+15. Select the **campaignanalyticscsv** data source, then select **Projection**. The projection should display the following schema:
 
-19. Now that the data flow is published, we can use it in a pipeline. Create a new pipeline by selecting **Orchestrate** from the left menu, then in the **Orchestrate** blade, expand the **+** button and select **Pipeline**.
+    ![The Projection tab is displayed with columns defined as described in the column mapping script.](media/dataflow_campaignanalytics_projectiontab.png)
 
-20. In the bottom pane, on the **General** tab of the pipeline, enter **ASAMCW - Exercise 2 - Copy Campaign Analytics Data** in the **Name** field.
+16. Select the **+** to the bottom right of the **campaignanalyticscsv** source, then select the **Select** schema modifier from the context menu.
 
-21. From the **Activities** menu, expand the **Move & transform** section and drag an instance of **Data flow** to the design surface of the pipeline.
+    ![The + button on the bottom right of the campaignanalyticscsv source is highlighted.](media/dataflow_campaignanalytics_addstep.png)
+
+17. In the bottom pane, under **Select settings**, configure the following:
+
+    | Field | Value |
+    |-------|-------|
+    | Output stream name  | Enter **mapcampaignanlytics** |
+
+    For **Input Columns**, under the **Name as** column, enter the following list values in order:
+      - Region
+      - Country
+      - ProductCategory
+      - CampaignName
+      - RevenuePart1
+      - Revenue
+      - RevenueTargetPart1
+      - RevenueTarget
+      - City
+      - State
+
+    ![The Select settings tab is displayed with the form filled as described in the preceding table.](media/dataflow_mapcampaignanalytics_selectsettings.png)
+
+18. Select the **+** to the right of the **mapCampaignAnalytics** source, then select the **Derived Column** schema modifier from the context menu.
+
+19. Under **Derived column's settings**, configure the following:
+
+    | Field | Value |
+    |-------|-------|
+    | Output stream name  | Enter **convertandaddcolums** |
+
+    For **Columns**, add the following (Note you will need to type in the **Analyst** column):
+
+    | Column | Expression | Description |
+    | --- | --- | --- |
+    | Revenue | **toDecimal(replace(concat(toString(RevenuePart1), toString(Revenue)), '\\', ''), 10, 2, '$###,###.##')** | Concatenate the **RevenuePart1** and **Revenue** fields, replace the invalid `\` character, then convert and format the data to a decimal type. |
+    | RevenueTarget | **toDecimal(replace(concat(toString(RevenueTargetPart1), toString(RevenueTarget)), '\\', ''), 10, 2, '$###,###.##')** | Concatenate the **RevenueTargetPart1** and **RevenueTarget** fields, replace the invalid `\` character, then convert and format the data to a decimal type. |
+    | Analyst | **iif(isNull(City), '',  replace('DataAnalyst'+ City,' ',''))** | If the city field is null, assign an empty string to the Analyst field, otherwise concatenate DataAnalyst to the City value, removing all spaces. |
+
+    ![The derived column's settings are displayed as described.](media/dataflow_campaignanalytics_derivedcolumns.png)
+
+20. Select the **+** to the right of the **convertandaddcolumns** step, then select the **Select** schema modifier from the context menu.
+
+21. Under **Select settings**, configure the following:
+
+    | Field | Value |
+    |-------|-------|
+    | Output stream name  | Enter **selectcampaignanalyticscolumns** |
+    | Input columns | Delete the **RevenuePart1** and **RevenueTargetPart1** columns |
+
+    ![The Select settings are displayed showing the updated column mappings.](media/dataflow_campaignanalytics_select2.png)
+
+22. Select the **+** to the right of the **selectcampaignanalyticscolumns** step, then select the **Sink** destination from the context menu.
+
+23. In the bottom pane, on the **Sink** tab, configure it as follows:
+
+    | Field | Value |
+    |-------|-------|
+    | Output stream name  | Enter **campaignanlyticsasa** |
+    | Dataset | Select **asamcw_campaignanalytics_asa**. |
+
+    ![The Sink settings form is displayed populated with the values defined in the previous table.](media/dataflow_campaignanalytics_sink.png)
+
+24. Select **Settings** tab, and for **Table action** select **Truncate table**.
+
+    ![The sink Settings tab is displayed with the Table action set to Truncate table.](media/dataflow_campaignanalytics_sinksettings.png)
+
+25. Your completed data flow should look similar to the following:
+
+    ![The completed data flow is displayed.](media/dataflow_campaignanalytics_complete.png)
+  
+26. Select **Publish all** to save your new data flow.
+
+    ![Publish all is highlighted.](media/publish-all-1.png "Publish all")
+
+27. Now that the data flow is published, we can use it in a pipeline. Create a new pipeline by selecting **Orchestrate** from the left menu, then in the **Orchestrate** blade, expand the **+** button and select **Pipeline**.
+
+28. Expand the **Properties** pane on the right side of the pipeline designer. Enter **ASAMCW - Exercise 2 - Copy Campaign Analytics Data** in the **Name** field.
+
+    ![The pipeline properties blade is displayed with the Name field populated with ASAMCW - Exercise 2 - Copy Campaign Analytics Data.](media/pipeline_properties_blade.png)
+
+29. From the **Activities** menu, expand the **Move & transform** section and drag an instance of **Data flow** to the design surface of the pipeline.
   
     ![The Activities menu of the pipeline is displayed with the Move and transform section expanded. An arrow indicating a drag operation shows adding a Data flow activity to the design surface of the pipeline.](media/pipeline_sales_dataflowactivitymenu.png)
 
-22. Select the data flow **ASAMCW - Exercise 2 - Campaign Analytics Data**, then select the Mapping Data Flow activity on the design surface.
+30. In the **Adding data flow** blade, select the data flow **ASAMCW - Exercise 2 - Campaign Analytics Data**, then **Finish**. Select the Mapping Data Flow activity on the design surface.
 
-23. In the bottom pane, select the **Settings** tab and set the form fields to the following values:
+31. In the bottom pane, select the **Settings** tab and set the form fields to the following values:
 
     | Field | Value |
     |-------|-------|
@@ -442,21 +528,19 @@ Similar to the customer information table, we will also be populating the campai
 
     ![The data flow activity Settings tab is displayed with the fields specified in the preceding table highlighted.](media/pipeline_campaigndata_dataflowsettings.png)
 
-24. In the top toolbar, select **Publish all** to publish the new pipeline. When prompted, select the **Publish** button to commit the changes.
+32. In the top toolbar, select **Publish all** to publish the new pipeline. When prompted, select the **Publish** button to commit the changes.
 
     ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
 
-25. Once published, expand the **Add trigger** item on the pipeline designer toolbar, and select **Trigger now**. In the **Pipeline run** blade, select **OK** to proceed with the latest published configuration. You will see notification toast windows indicating the pipeline is running and when it has completed.
+33. Once published, expand the **Add trigger** item on the pipeline designer toolbar, and select **Trigger now**. In the **Pipeline run** blade, select **OK** to proceed with the latest published configuration. You will see notification toast window indicating the pipeline is running and when it has completed.
 
-26. View the status of the pipeline run by locating the **ASAMCW - Exercise 2 - Copy Campaign Analytics Data** pipeline in the Orchestrate blade. Expand the actions menu, and select the **Monitor** item.
+34. View the status of the pipeline run by locating the **ASAMCW - Exercise 2 - Copy Campaign Analytics Data** pipeline in the Orchestrate blade. Expand the actions menu, and select the **Monitor** item.
 
     ![In the Orchestrate blade, the Action menu is displayed with the Monitor item selected on the ASAMCW - Exercise 2 - Copy Sale Data pipeline.](media/orchestrate_pipeline_monitor_copysaledata.png)
   
-27. You should see a run of the pipeline we created in the **Pipeline runs** table showing as in progress. It will take approximately 45 minutes for this pipeline operation to complete. You will need to refresh this table from time to time to see updated progress. Once it has completed. You should see the pipeline run displayed with a Status of **Succeeded**.
-  
-    ![On the pipeline runs screen, a successful pipeline run is highlighted in the table.](media/pipeline_run_sales_successful.png)
+35. You should see a run of the pipeline we created in the **Pipeline runs** table showing as in progress. You will need to refresh this table from time to time to see updated progress. Once it has completed. You should see the pipeline run displayed with a Status of **Succeeded**.
 
-28. Verify the table has populated by creating a new query. Select the **Develop** item from the left menu, and in the **Develop** blade, expand the **+** button, and select **SQL script**. In the query window, be sure to connect to the SQL Pool database (`SQLPool01`), then paste and run the following query. When complete, select the **Discard all** button from the top toolbar.
+36. Verify the table has populated by creating a new query. Select the **Develop** item from the left menu, and in the **Develop** blade, expand the **+** button, and select **SQL script**. In the query window, be sure to connect to the SQL Pool database (`SQLPool01`), then paste and run the following query. When complete, select the **Discard all** button from the top toolbar.
 
   ```sql
     select count(Region) from wwi_mcw.CampaignAnalytics;
@@ -614,7 +698,7 @@ The data that we will be retrieving to populate the sale table is currently stor
 
 18. We can now use this data flow as an activity in a pipeline. Create a new pipeline by selecting **Orchestrate** from the left menu, and in the **Orchestrate** blade, expand the **+** button and select **Pipeline**.
 
-19. In the bottom pane, with the **General** tab selected, enter **ASAMCW - Exercise 2 - Copy Sale Data** as the Name of the pipeline.
+19. Select the **Properties** button from the right side of the designer toolbar. On the **Properties** blade, Enter **ASAMCW - Exercise 2 - Copy Sale Data** as the Name of the pipeline.
 
 20. From the **Activities** menu, expand the **Move & transform** section and drag an instance of **Data flow** to the design surface of the pipeline.
   
@@ -670,6 +754,125 @@ When the lab environment was provisioned, the **wwi_mcw.Product** table and data
   ```sql
     select * from wwi_mcw.Product;
   ```
+
+## Exercise 3: Exploring raw data
+
+Understanding data through data exploration is one of the core challenges faced today by data engineers and data scientists as well. Depending on the underlying structure of the data as well as the specific requirements of the exploration process, different data processing engines will offer varying degrees of performance, complexity, and flexibility.
+
+In Azure Synapse Analytics, you have the possibility of using either the Synapse SQL Serverless engine, the big-data Spark engine, or both.
+
+In this exercise, you will explore the data lake using both options.
+
+### Task 1: Query sales Parquet data with Synapse SQL Serverless
+
+When you query Parquet files using Synapse SQL Serverless, you can explore the data with T-SQL syntax.
+
+1. From the left menu, select **Data**.
+
+2. Expand **Storage accounts**. Expand the `PrimaryStorage` ADLS Gen2 account and select **wwi-02**.
+
+3. Navigate to the **sale-small/Year=2010/Quarter=Q4/Month=12/Day=20101231** folder. Right-click on the **sale-small-20101231-snappy.parquet** file, select **New SQL script**, then **Select TOP 100 rows**.
+
+    ![The Storage accounts section is expanded with the context menu visible on the PrimaryStorage account with the Select TOP 100 rows option highlighted.](media/data-hub-parquet-select-rows.png)
+
+4. Ensure **SQL on-demand** is selected in the **Connect to** dropdown list above the query window, then run the query. Data is loaded by the Synapse SQL Serverless endpoint and processed as if was coming from any regular relational database.
+
+    ![The SQL on-demand connection is highlighted on the query window toolbar.](media/sql-on-demand-selected.png "SQL on-demand")
+
+5. Modify the SQL query to perform aggregates and grouping operations to better understand the data. Replace the query with the following, making sure that the file path in **OPENROWSET** matches your current file path, be sure to substitute `PrimaryStorage` for the appropriate value in your environment:
+
+    ```sql
+    SELECT
+        TransactionDate, ProductId,
+        CAST(SUM(ProfitAmount) AS decimal(18,2)) AS [(sum) Profit],
+        CAST(AVG(ProfitAmount) AS decimal(18,2)) AS [(avg) Profit],
+        SUM(Quantity) AS [(sum) Quantity]
+    FROM
+        OPENROWSET(
+            BULK 'https://<PrimaryStorage>.dfs.core.windows.net/wwi-02/sale-small/Year=2010/Quarter=Q4/Month=12/Day=20101231/sale-small-20101231-snappy.parquet',
+            FORMAT='PARQUET'
+        ) AS [r] GROUP BY r.TransactionDate, r.ProductId;
+    ```
+
+    ![The T-SQL query above is displayed within the query window.](media/sql-serverless-aggregates.png "Query window")
+
+6. Now let's figure out how many records are contained within the Parquet files for 2019 data. This information is important for planning how we optimize for importing the data into Azure Synapse Analytics. To do this, replace your query with the following (be sure to update the name of your data lake in BULK statement, by replacing `PrimaryStorage`):
+
+    ```sql
+    SELECT
+        COUNT_BIG(*)
+    FROM
+        OPENROWSET(
+            BULK 'https://<PrimaryStorage>.dfs.core.windows.net/wwi-02/sale-small/Year=2019/*/*/*/*',
+            FORMAT='PARQUET'
+        ) AS [r];
+    ```
+
+    > Notice how we updated the path to include all Parquet files in all subfolders of `sale-small/Year=2019`.
+
+    The output should be **339507246** records.
+
+### Task 2: Query sales Parquet data with Azure Synapse Spark
+
+1. Select **Data** from the left menu, then browse to the data lake storage account folder **sale-small/Year=2010/Quarter=Q4/Month=12/Day=20101231** located in `PrimaryStorage` if needed, then right-click the Parquet file and select New notebook.
+
+    ![The Parquet file is displayed with the New notebook menu item highlighted.](media/new-spark-notebook-sales.png "New notebook")
+
+2. This will generate a notebook with PySpark code to load the data in a dataframe and display 100 rows with the header.
+
+3. Attach the notebook to a Spark pool.
+
+    ![The Spark pool list is displayed.](media/attach-spark-pool.png "Attach to Spark pool")
+
+4. Select **Run all** on the notebook toolbar to execute the notebook.
+
+    > **Note:** The first time you run a notebook in a Spark pool, Synapse creates a new session. This can take approximately 3 minutes.
+    > **Note:** To run just the cell, either hover over the cell and select the _Run cell_ icon to the left of the cell, or select the cell then type **Ctrl+Enter** on your keyboard.
+
+5. Create a new cell underneath by selecting **{} Add code** when hovering over the blank space at the bottom of the notebook.
+
+    ![The Add Code menu option is highlighted.](media/new-cell.png "Add code")
+
+6. The Spark engine can analyze the Parquet files and infer the schema. To do this, enter the following in the new cell:
+
+    ```python
+    data_path.printSchema()
+    ```
+
+    Your output should look like the following:
+
+    ```text
+    root
+        |-- TransactionId: string (nullable = true)
+        |-- CustomerId: integer (nullable = true)
+        |-- ProductId: short (nullable = true)
+        |-- Quantity: short (nullable = true)
+        |-- Price: decimal(29,2) (nullable = true)
+        |-- TotalAmount: decimal(29,2) (nullable = true)
+        |-- TransactionDate: integer (nullable = true)
+        |-- ProfitAmount: decimal(29,2) (nullable = true)
+        |-- Hour: byte (nullable = true)
+        |-- Minute: byte (nullable = true)
+        |-- StoreId: short (nullable = true)
+    ```
+
+7. Now let's use the dataframe to perform the same grouping and aggregate query we performed with the SQL Serverless pool. Create a new cell and enter the following:
+
+    ```python
+    from pyspark.sql import SparkSession
+    from pyspark.sql.types import *
+    from pyspark.sql.functions import *
+
+    profitByDateProduct = (data_path.groupBy("TransactionDate","ProductId")
+        .agg(
+            sum("ProfitAmount").alias("(sum)ProfitAmount"),
+            round(avg("Quantity"), 4).alias("(avg)Quantity"),
+            sum("Quantity").alias("(sum)Quantity"))
+        .orderBy("TransactionDate"))
+    profitByDateProduct.show(100)
+    ```
+
+ > We import required Python libraries to use aggregation functions and types defined in the schema to successfully execute the query.
 
 ## Exercise 5: Security
 
