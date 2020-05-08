@@ -1401,6 +1401,20 @@ All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This
 
 ### Task 5: Monitoring SQL Requests with the Monitor Hub
 
+1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Lab 08 - Execute Business Analyst Queries** Pipeline.
+
+    ![The add trigger and trigger now menu items are highlighted.](media/ex7-task5-01.png "Add trigger")
+
+2. Navigate to the `Monitor` hub. Then select **SQL requests** to get a list of SQL requests that ran during the last 24 hours.
+
+3. Select the **Pool** filter and select your SQL Pool. Observe the `Request Submitter`, `Submit Time`, `Duration`, and `Queued Duration` values.
+
+    ![The SQL requests blade is displayed within the Monitor hub.](media/ex7-task5-02.png "Monitor - SQL requests")
+
+4. Hover onto a SQL Request log and select `Request Content` to access the actual T-SQL command executed as part of the SQL Request.
+
+    ![The request content link is displayed over a SQL request.](media/ex7-task5-03.png "SQL requests")
+    
 ## After the hands-on lab
 
 Duration: X minutes
