@@ -42,7 +42,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 4: Populate the campaign analytics table](#task-4-populate-the-campaign-analytics-table)
     - [Task 5: Create the sale table](#task-5-create-the-sale-table)
     - [Task 6: Populate the sale table](#task-6-populate-the-sale-table)
-    - [Task 7: Create and populate the Product table](#task-7-create-and-populate-the-product-table)
+    - [Task 7: Populate the product table](#task-7-populate-the-product-table)
   - [Exercise 5: Security](#exercise-5-security)
     - [Task 1: Column level security](#task-1-column-level-security)
     - [Task 2: Row level security](#task-2-row-level-security)
@@ -287,7 +287,17 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
   
 ### Task 3: Create the campaign analytics table
 
-1. Create the campaign analytics table
+The campaign analytics table will be queried primarily for dashboard and KPI purposes. Performance is a large factor in the design of this table, and as such  we can ascertain that we will need a **Clustered Columnstore** table with a **Hash** table distribution based on the **Region** field which will fairly evenly distribute the data.
+
+1. Expand the left menu and select the **Develop** item. From the **Develop** blade, expand the **+** button and select the **SQL script** item.
+
+    ![The left menu is expanded with the Develop item selected. The Develop blade has the + button expanded with the SQL script item highlighted.](media/develop_newsqlscript_menu.png)
+
+2. In the query tab toolbar menu, ensure you connect to your SQL Pool, `SQLPool01`.
+
+    ![The query tab toolbar menu is displayed with the Connect to set to the SQL Pool.](media/querytoolbar_connecttosqlpool.png)
+
+3. In the query window, copy and paste the following query to create the customer information table. Then select the **Run** button in the query tab toolbar.
 
     ```sql
     CREATE TABLE [wwi_mcw].[CampaignAnalytics]
@@ -309,7 +319,148 @@ Over the past 5 years, Wide World Importers has amassed over 3 billion rows of s
     );  
     ```
 
+    ![The query tab toolbar is displayed with the Run button selected.](media/querytoolbar_run.png)
+
+4. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
+
 ### Task 4: Populate the campaign analytics table
+
+Similar to the customer information table, we will also be populating the campaign analytics table via a CSV file located in the public storage account. This will require source and sink datasets to point to the CSV file in storage and the campaign analytics table that you just created in the SQL Pool.
+
+1. The source dataset will reference the CSV file containing campaign analytics information. From the left menu, select **Data**. From the **Data** blade, expand the **+** button and select **Dataset**.
+
+    ![The Data item is selected from the left menu. On the Data blade, the + button is expanded with the Dataset item highlighted.](media/data_newdatasetmenu.png)
+
+2. On the **New dataset** blade, with the **All** tab selected, choose the **Azure Blob Storage** item. Select **Continue**.  
+  
+    ![On the New dataset blade, the All tab is selected and the Azure Blob Storage item is highlighted.](media/newdataset_azureblobstorage.png)
+
+3. On the **Select format** blade, select **CSV Delimited Text**. Select **Continue**.
+
+    ![On the Select format blade the CSV Delimited Text item is highlighted.](media/newdataset_selectfileformat_csv.png)
+
+4. On the **Set properties** blade, set the fields to the following values, then select **OK**.
+
+   | Field | Value |
+   |-------|-------|
+   | Name  | Enter **asamcw_campaignanalytics_csv** |
+   | Linked service | Select **solliancepublicdata**.|
+   | File Path - Container | Enter **wwi-02** |
+   | File Path - Directory | Enter **campaign-analytics** |
+   | File Path - File | Enter **asamcw_campaignanalytics.csv** |
+   | First row as header | Checked |
+   | Import schema | Select **From connection/store** |
+
+    ![The Set properties form is displayed with the values specified in the previous table.](media/campaignanalyticsdatasetpropertiesform.png)
+
+5. Now we will need to define the destination dataset for our data. In this case we will be storing campaign analytics data in our SQL Pool. On the **Data** blade, expand the **+** button and select **Dataset**.
+
+6. On the **New dataset** blade, with the **Azure** tab selected, enter **synapse** as a search term and select the **Azure Synapse Analytics (formerly SQL DW)** item. Select **Continue**.
+
+    ![On the New dataset blade, synapse is entered as the search term and Azure Synapse Analytics (formerly SQL DW) is selected from the filtered results.](media/newdataset_synapseitem.png)
+  
+7. On the **Set properties** blade, set the field values to the following, then select **OK**.
+
+   | Field | Value |
+   |-------|-------|
+   | Name  | Enter **asamcw_campaignanalytics_asa** |
+   | Linked service | Select `SQLPool01`. |
+   | Table name | Select **wwi_mcw.CampaignAnalytics**. |  
+   | Import schema | Select **From connection/store** |
+
+    ![The Set properties blade is populated with the values specified in the preceding table.](media/dataset_campaignanalyticsasaform.png)
+  
+8. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to commit the changes.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+9. Since our source data does not contain an Analyst column, we will need to create a data flow to transform the source data that will allow us to define the value for the Analyst column to be populated in our destination dataset. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow, start by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
+
+    ![From the left menu, the Develop item is selected. From the Develop blade the + button is expanded with the Data flow item highlighted.](media/develop_newdataflow_menu.png)
+
+10. In the lower pane on the **General** tab, name the data flow by entering **ASAMCW - Exercise 2 - Campaign Analytics Data** in the **Name** field.
+
+    ![The General tab is displayed with ASAMCW - Exercise 2 - Campaign Analytics Data entered as the name of the data flow.](media/media/dataflow_campaignanalytics_generaltab.png)
+
+11. In the data flow designer window, select the **Add Source** box.
+
+    ![The Add source box is highlighted in the data flow designer window.](media/dataflow_addsourcebox.png)
+
+12. With the source element selected on the data flow designer, in the bottom pane on the **Source settings** tab, set the **Output stream name** to **campaignanalyticsdata** and select the **asamcw_campaignanalytics_csv** as the **Dataset**.
+
+    ![The Source settings tab is selected with the Output stream name set to campaignanalyticsdata and the Dataset field set to asamcw_campaignanalytics_csv.](media/dataflow_campaignanalytics_sourcesettings.png)
+
+13. Select the **Projection** tab, and change the type for **Revenue** and **RevenueTarget** columns to **Decimal**.
+  
+    ![The Projection tab is shown with the Revenue and RevenueTarget column types set to decimal.](media/dataflow_campaignanalytics_source_projectiontab.png)
+
+14. On the data flow designer, select the **+** button on the lower right corner of the **campaignanalyticsdata** element. From the expanded menu, select **Derived column**.
+
+    ![In the data flow design surface, the + button located on the bottom right of the campaignanalyticsdata source is highlighted.](media/dataflow_campaignanalytics_addstep.png)
+
+15. The derived column that we will be creating will be the Analyst column. The value of this column is set based on the value that is present in the City column of the CSV source file. Every row with the City value of Miami should have the Analyst column populated with **DataAnalystMiami**, and every row with the City value of San Diego should have the Analyst column populated with **DataAnalystSanDiego**. Define this column by selecting the derived column element the design surface, in the bottom pane with the **Derived column's settings** tab selected, fill the form as follows:
+
+    | Field | Value |
+    |-------|-------|
+    | Output stream name  | Enter **analystcolumn** |
+    | Incoming stream | Select **campaignanalyticsdata**. |
+    | Columns - Name | Enter **Analyst** |  
+    | Columns - Expression | Enter **case(City=="Miami","DataAnalystMiami",case(City=="San Diego", "DataAnalystSanDiego", City))** |
+
+    ![The Derived column's settings tab is displayed with the form populated with the values from the preceding table.](media/dataflow_campaignanalytics_derivedcolumn.png)
+
+16. On the data flow design surface, expand the **+** button located at the lower right corner of the **analystcolumn** element. Select to add a **Sink**.
+
+17. Select the **Sink** element, and in the bottom pane on the **Sink** tab, set the **Output stream name** to **campaignanalytics** and select the **asamcw_campaignanalytics_asa** as the **Dataset**.
+
+    ![The Sink tab is displayed with the Output stream name set to campaignanalytics and the Dataset set to asamcw_campaignanalytics_asa.](media/dataflow_campaignanalytics_sinktab.png)
+
+18. In the top toolbar, select **Publish all** to publish the new dataset definitions. When prompted, select the **Publish** button to commit the changes.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+19. Now that the data flow is published, we can use it in a pipeline. Create a new pipeline by selecting **Orchestrate** from the left menu, then in the **Orchestrate** blade, expand the **+** button and select **Pipeline**.
+
+20. In the bottom pane, on the **General** tab of the pipeline, enter **ASAMCW - Exercise 2 - Copy Campaign Analytics Data** in the **Name** field.
+
+21. From the **Activities** menu, expand the **Move & transform** section and drag an instance of **Data flow** to the design surface of the pipeline.
+  
+    ![The Activities menu of the pipeline is displayed with the Move and transform section expanded. An arrow indicating a drag operation shows adding a Data flow activity to the design surface of the pipeline.](media/pipeline_sales_dataflowactivitymenu.png)
+
+22. Select the data flow **ASAMCW - Exercise 2 - Campaign Analytics Data**, then select the Mapping Data Flow activity on the design surface.
+
+23. In the bottom pane, select the **Settings** tab and set the form fields to the following values:
+
+    | Field | Value |
+    |-------|-------|
+    | Data flow  | Select **ASAMCW - Exercise 2 - Campaign Analytics Data** |
+    | Staging linked service | Select `PrimaryStorage`. |
+    | Staging storage folder - Container | Enter **staging** |
+    | Staging storage folder - Folder | Enter **mcwcampaignanalytics** |
+
+    ![The data flow activity Settings tab is displayed with the fields specified in the preceding table highlighted.](media/pipeline_campaigndata_dataflowsettings.png)
+
+24. In the top toolbar, select **Publish all** to publish the new pipeline. When prompted, select the **Publish** button to commit the changes.
+
+    ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
+
+25. Once published, expand the **Add trigger** item on the pipeline designer toolbar, and select **Trigger now**. In the **Pipeline run** blade, select **OK** to proceed with the latest published configuration. You will see notification toast windows indicating the pipeline is running and when it has completed.
+
+26. View the status of the pipeline run by locating the **ASAMCW - Exercise 2 - Copy Campaign Analytics Data** pipeline in the Orchestrate blade. Expand the actions menu, and select the **Monitor** item.
+
+    ![In the Orchestrate blade, the Action menu is displayed with the Monitor item selected on the ASAMCW - Exercise 2 - Copy Sale Data pipeline.](media/orchestrate_pipeline_monitor_copysaledata.png)
+  
+27. You should see a run of the pipeline we created in the **Pipeline runs** table showing as in progress. It will take approximately 45 minutes for this pipeline operation to complete. You will need to refresh this table from time to time to see updated progress. Once it has completed. You should see the pipeline run displayed with a Status of **Succeeded**.
+  
+    ![On the pipeline runs screen, a successful pipeline run is highlighted in the table.](media/pipeline_run_sales_successful.png)
+
+28. Verify the table has populated by creating a new query. Select the **Develop** item from the left menu, and in the **Develop** blade, expand the **+** button, and select **SQL script**. In the query window, be sure to connect to the SQL Pool database (`SQLPool01`), then paste and run the following query. When complete, select the **Discard all** button from the top toolbar.
+
+  ```sql
+    select count(Region) from wwi_mcw.CampaignAnalytics;
+  ```
 
 ### Task 5: Create the sale table
 
@@ -408,7 +559,7 @@ The data that we will be retrieving to populate the sale table is currently stor
 
     ![The top toolbar is displayed with the Publish all button highlighted.](media/publishall_toolbarmenu.png)
 
-9. Since we want to filter on multiple sale year folders (Year=2018 and Year=2019) and copy only the 2018 and 2019 sales data, we will need to create a data flow to define the specific data that we wish to retrieve from our source dataset. A data flow allows you to graphically define dataset filters and transformations without writing code. These data flows can be leveraged as an activity in an orchestration pipeline. Create a new data flow, start by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
+9. Since we want to filter on multiple sale year folders (Year=2018 and Year=2019) and copy only the 2018 and 2019 sales data, we will need to create a data flow to define the specific data that we wish to retrieve from our source dataset. To create a new data flow, start by selecting **Develop** from the left menu, and in the **Develop** blade, expand the **+** button and select **Data flow**.
 
     ![From the left menu, the Develop item is selected. From the Develop blade the + button is expanded with the Data flow item highlighted.](media/develop_newdataflow_menu.png)
 
@@ -502,9 +653,9 @@ The data that we will be retrieving to populate the sale table is currently stor
     select count(TransactionId) from wwi_mcw.SaleSmall;
   ```
 
-### Task 7: Create and populate the Product table
+### Task 7: Populate the product table
 
-When the lab environment was provisioned, the **wwi_mcw.Product** table, and datasets required for its population were created. Throughout this exercise, you have gained experience creating datasets, data flows, and pipelines. The population of the product table would be repetitive, so we will simply trigger an existing pipeline to populate this table.
+When the lab environment was provisioned, the **wwi_mcw.Product** table and datasets required for its population were created. Throughout this exercise, you have gained experience creating datasets, data flows, and pipelines. The population of the product table would be repetitive, so we will simply trigger an existing pipeline to populate this table.
 
 1. From the left menu, select **Orchestrate**. From the **Orchestrate** blade, expand the **Pipelines** section and locate and select the **ASAMCW - Exercise 2 - Copy Product Information** pipeline.
 
@@ -522,12 +673,16 @@ When the lab environment was provisioned, the **wwi_mcw.Product** table, and dat
 
 ## Exercise 5: Security
 
-It is important to identify data columns of that hold sensitive information. Types of sensitive information could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
-
 ### Task 1: Column level security
 
-  ```sql
-      /*  Column-level security feature in Azure Synapse simplifies the design and coding of security in applications.
+It is important to identify data columns of that hold sensitive information. Types of sensitive information could be social security numbers, email addresses, credit card numbers, financial totals, and more. Azure Synapse Analytics allows you define permissions that prevent users or roles select privileges on specific columns.
+
+1. Create a new SQL Script by selecting **Develop** from the left menu, then in the **Develop** blade, expanding the **+** button and selecting **SQL Query**.
+
+2. Copy and paste the following query into the query window. Then, step through each statement by highlighting it in the query window, and selecting **Run** from the query window toolbar menu. The query is documented inline.
+
+    ```sql
+        /*  Column-level security feature in Azure Synapse simplifies the design and coding of security in applications.
         It ensures column level security by restricting column access to protect sensitive data. */
 
     /* Scenario: In this scenario we will be working with two users. The first one is the CEO, he has access to all
@@ -574,85 +729,109 @@ It is important to identify data columns of that hold sensitive information. Typ
     EXECUTE AS USER ='CEO'
     select * from wwi_mcw.CampaignAnalytics
     Revert;
-  ```
+    ```
+
+    ![The query tab toolbar is displayed with the Run button selected.](media/querytoolbar_run.png)
+
+3. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
 
 ### Task 2: Row level security
 
-  ```sql
+In many organizations it is important to filter certain rows of data by user. In the case of WWI, they wish to have data analysts only see their data. In the campaign analytics table, there is an Analyst column that indicates to which analyst that row of data belongs. In the past, organizations would create views for each analyst - this was a lot of work and unnecessary overhead. Using Azure Synapse Analytics, you can define row level security that compares the user executing the query to the Analyst column, filtering the data so they only see the data destined for them.
+
+1. Create a new SQL Script by selecting **Develop** from the left menu, then in the **Develop** blade, expanding the **+** button and selecting **SQL Query**.
+
+2. Copy and paste the following query into the query window. Then, step through each statement by highlighting it in the query window, and selecting **Run** from the query window toolbar menu. The query is documented inline.
+
+    ```sql
     /* Row level Security (RLS) in Azure Synapse enables us to use group membership to control access to rows in a table.
-    Azure Synapse applies the access restriction every time the data access is attempted from any user. 
+    Azure Synapse applies the access restriction every time the data access is attempted from any user.
     Let see how we can implement row level security in Azure Synapse.*/
 
-  ----------------------------------Row-Level Security (RLS), 1: Filter predicates------------------------------------------------------------------
-  -- Step:1 The Sale table has two Analyst values: DataAnalystMiami and DataAnalystSanDiego. 
-  --     Each analyst has jurisdiction across a specific Region. DataAnalystMiami on the South East Region
-  --      and DataAnalystSanDiego on the Far West region.
-  SELECT DISTINCT Analyst, Region FROM wwi_mcw.CampaignAnalytics order by Analyst ;
+    -- Row-Level Security (RLS), 1: Filter predicates
+    -- Step:1 The Sale table has two Analyst values: DataAnalystMiami and DataAnalystSanDiego. 
+    --     Each analyst has jurisdiction across a specific Region. DataAnalystMiami on the South East Region
+    --      and DataAnalystSanDiego on the Far West region.
+    SELECT DISTINCT Analyst, Region FROM wwi_mcw.CampaignAnalytics order by Analyst ;
 
-  /* Scenario: WWI requires that an Analyst only see the data for their own data from their own region. The CEO should see ALL data.
-      In the Sale table, there is an Analyst column that we can use to filter data to a specific Analyst value. */
+    /* Scenario: WWI requires that an Analyst only see the data for their own data from their own region. The CEO should see ALL data.
+        In the Sale table, there is an Analyst column that we can use to filter data to a specific Analyst value. */
 
-  /* We will define this filter using what is called a Security Predicate. This is an inline table-valued function that allows
-      us to evaluate additional logic, in this case determining if the Analyst executing the query is the same as the Analyst
-      specified in the Analyst column in the row. The function returns 1 (will return the row) when a row in the Analyst column is the same as the user executing the query (@Analyst = USER_NAME()) or if the user executing the query is the CEO user (USER_NAME() = 'CEO')
-      whom has access to all data.
-  */
+    /* We will define this filter using what is called a Security Predicate. This is an inline table-valued function that allows
+        us to evaluate additional logic, in this case determining if the Analyst executing the query is the same as the Analyst
+        specified in the Analyst column in the row. The function returns 1 (will return the row) when a row in the Analyst column is the same as the user executing the query (@Analyst = USER_NAME()) or if the user executing the query is the CEO user (USER_NAME() = 'CEO')
+        whom has access to all data.
+    */
 
-  -- Review any existing security predicates in the database
-  SELECT * FROM sys.security_predicates
+    -- Review any existing security predicates in the database
+    SELECT * FROM sys.security_predicates
 
-  --Step:2 Create a new Schema to hold the security predicate, then define the predicate function. It returns 1 (or True) when
-  --  a row should be returned in the parent query.
-  GO
-  CREATE SCHEMA Security
-  GO
-  CREATE FUNCTION Security.fn_securitypredicate(@Analyst AS sysname)  
-      RETURNS TABLE  
-  WITH SCHEMABINDING  
-  AS  
-      RETURN SELECT 1 AS fn_securitypredicate_result
-      WHERE @Analyst = USER_NAME() OR USER_NAME() = 'CEO'
-  GO
-  -- Now we define security policy that adds the filter predicate to the Sale table. This will filter rows based on their login name.
-  CREATE SECURITY POLICY SalesFilter  
-  ADD FILTER PREDICATE Security.fn_securitypredicate(Analyst)
-  ON wwi_mcw.CampaignAnalytics
-  WITH (STATE = ON);
+    --Step:2 Create a new Schema to hold the security predicate, then define the predicate function. It returns 1 (or True) when
+    --  a row should be returned in the parent query.
+    GO
+    CREATE SCHEMA Security
+    GO
+    CREATE FUNCTION Security.fn_securitypredicate(@Analyst AS sysname)  
+        RETURNS TABLE  
+    WITH SCHEMABINDING  
+    AS  
+        RETURN SELECT 1 AS fn_securitypredicate_result
+        WHERE @Analyst = USER_NAME() OR USER_NAME() = 'CEO'
+    GO
+    -- Now we define security policy that adds the filter predicate to the Sale table. This will filter rows based on their login name.
+    CREATE SECURITY POLICY SalesFilter  
+    ADD FILTER PREDICATE Security.fn_securitypredicate(Analyst)
+    ON wwi_mcw.CampaignAnalytics
+    WITH (STATE = ON);
 
-  ------ Allow SELECT permissions to the Sale Table.------
-  GRANT SELECT ON wwi_mcw.CampaignAnalytics TO CEO, DataAnalystMiami, DataAnalystSanDiego;
+    ------ Allow SELECT permissions to the Sale Table.------
+    GRANT SELECT ON wwi_mcw.CampaignAnalytics TO CEO, DataAnalystMiami, DataAnalystSanDiego;
 
-  -- Step:3 Let us now test the filtering predicate, by selecting data from the Sale table as 'DataAnalystMiami' user.
-  EXECUTE AS USER = 'DataAnalystMiami'
-  SELECT * FROM wwi_mcw.CampaignAnalytics;
-  revert;
-  -- As we can see, the query has returned rows here Login name is DataAnalystMiami
+    -- Step:3 Let us now test the filtering predicate, by selecting data from the Sale table as 'DataAnalystMiami' user.
+    EXECUTE AS USER = 'DataAnalystMiami'
+    SELECT * FROM wwi_mcw.CampaignAnalytics;
+    revert;
+    -- As we can see, the query has returned rows here Login name is DataAnalystMiami
 
-  -- Step:4 Let us test the same for  'DataAnalystSanDiego' user.
-  EXECUTE AS USER = 'DataAnalystSanDiego';
-  SELECT * FROM wwi_mcw.CampaignAnalytics;
-  revert;
-  -- RLS is working indeed.
+    -- Step:4 Let us test the same for  'DataAnalystSanDiego' user.
+    EXECUTE AS USER = 'DataAnalystSanDiego';
+    SELECT * FROM wwi_mcw.CampaignAnalytics;
+    revert;
+    -- RLS is working indeed.
 
-  -- Step:5 The CEO should be able to see all rows in the table.
-  EXECUTE AS USER = 'CEO';  
-  SELECT * FROM wwi_mcw.CampaignAnalytics;
-  revert;
-  -- And he can.
+    -- Step:5 The CEO should be able to see all rows in the table.
+    EXECUTE AS USER = 'CEO';  
+    SELECT * FROM wwi_mcw.CampaignAnalytics;
+    revert;
+    -- And he can.
 
-  --Step:6 To disable the security policy we just created above, we execute the following.
-  ALTER SECURITY POLICY SalesFilter  
-  WITH (STATE = OFF);
+    --Step:6 To disable the security policy we just created above, we execute the following.
+    ALTER SECURITY POLICY SalesFilter  
+    WITH (STATE = OFF);
 
-  DROP SECURITY POLICY SalesFilter;
-  DROP FUNCTION Security.fn_securitypredicate;
-  DROP SCHEMA Security;
-  ```
+    DROP SECURITY POLICY SalesFilter;
+    DROP FUNCTION Security.fn_securitypredicate;
+    DROP SCHEMA Security;
+    ```
+
+    ![The query tab toolbar is displayed with the Run button selected.](media/querytoolbar_run.png)
+
+3. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
 
 ### Task 3: Dynamic data masking
 
-```sql
-    -------------------------------------------------------------------------Dynamic Data Masking (DDM)----------------------------------------------------------------------------------------------------------
+As an alternative to column level security, SQL Administrators also have the option of masking sensitive data. This will result in data being obfuscated when returned in queries. The data is still stored in a pristine state in the table itself. SQL Administrators can grant unmask privileges to users that have permissions to see this data.
+
+1. Create a new SQL Script by selecting **Develop** from the left menu, then in the **Develop** blade, expanding the **+** button and selecting **SQL Query**.
+
+2. Copy and paste the following query into the query window. Then, step through each statement by highlighting it in the query window, and selecting **Run** from the query window toolbar menu. The query is documented inline.
+
+    ```sql
+    ----- Dynamic Data Masking (DDM) ---------
     /*  Dynamic data masking helps prevent unauthorized access to sensitive data by enabling customers
         to designate how much of the sensitive data to reveal with minimal impact on the application layer.
         Let see how */
@@ -711,7 +890,13 @@ It is important to identify data columns of that hold sensitive information. Typ
     ALTER TABLE wwi_mcw.CustomerInfo
     ALTER COLUMN Email DROP MASKED;
     GO
-```
+    ```
+
+    ![The query tab toolbar is displayed with the Run button selected.](media/querytoolbar_run.png)
+
+3. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
 
 ## Exercise 6: Machine Learning
 
@@ -793,7 +978,7 @@ In this task, you will explore the model registration process in Azure Synapse A
       CREATE EXTERNAL DATA SOURCE ASAMCWModelStorage
       WITH
       (
-          LOCATION = 'wasbs://wwi-02@asadatalake01.blob.core.windows.net'
+          LOCATION = 'wasbs://wwi-02@<data_lake_account_name>.blob.core.windows.net'
           ,CREDENTIAL = StorageCredential
           ,TYPE = HADOOP
       );
@@ -853,11 +1038,11 @@ In this task, you will explore the model registration process in Azure Synapse A
 
 In this task, you will author a T-SQL query that uses the previously trained model to make predictions.
 
-1. Open Synapse Analytics Studio, and then navigate to the `Data` hub.
+1. From the left menu, select **Data**.
 
-2. Expand the Databases listing, right click your SQL Pool and then select `New SQL Script`, and then `Empty script`.
+2. Expand the **Databases** section, right-click your SQL Pool and then select **New SQL Script**, and then **Empty script**.
 
-   ![Showing the context menu, selecting New SQL Script, Empty Script](media/lab06-new-sql-script.png "Create new script")
+   ![The database context menu is shown, with New SQL Script and Empty Script selected.](media/lab06-new-sql-script.png "Create new script")
 
 3. Replace the contents of this script with following:
 
@@ -874,7 +1059,7 @@ In this task, you will author a T-SQL query that uses the previously trained mod
 
 4. Select **Run** from the menubar.
 
-   ![The Run button](media/lab06-select-run.png "Select Run")
+   ![The Run button is selected from the toolbar.](media/lab06-select-run.png "Select Run")
 
 5. Create another new SQL script and replace the contents with the following:
 
@@ -889,7 +1074,7 @@ In this task, you will author a T-SQL query that uses the previously trained mod
 
 6. Run the script and view the results, notice that the `Prediction` column is the model's prediction of the `Seasonality` property of each product.
 
-   ![Viewing the prediction results in the query result pane](media/lab06-view-prediction-results.png "View prediction results")
+   ![The query results pane is displayed with the prediction results.](media/lab06-view-prediction-results.png "View prediction results")
 
 ## Exercise 7: Monitoring
 

@@ -30,8 +30,8 @@ IDENTITY = 'SHARED ACCESS SIGNATURE'
 
 CREATE EXTERNAL DATA SOURCE ASAMCWModelStorage
 WITH
-( 
-    LOCATION = 'wasbs://wwi-02@asadatalake01.blob.core.windows.net'
+(
+    LOCATION = 'wasbs://wwi-02@<data_lake_account_name>.blob.core.windows.net'
     ,CREDENTIAL = StorageCredential
     ,TYPE = HADOOP
 );
