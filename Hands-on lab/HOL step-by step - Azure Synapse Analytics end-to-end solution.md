@@ -1387,6 +1387,18 @@ All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This
     
 ### Task 4: Orchestration Monitoring with the Monitor Hub
 
+1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Lab 08 - Execute Business Analyst Queries** Pipeline.
+
+    ![The add trigger and trigger now menu items are highlighted.](media/ex7-task4-01.png "Add trigger")
+
+2. Navigate to the `Monitor` hub. Then select **Pipeline runs** to get a list of pipelines that ran during the last 24 hours. Observe the Pipeline status.
+
+    ![The pipeline runs blade is displayed within the Monitor hub.](media/ex7-task4-02.png "Monitor - Pipeline runs")
+
+3. Hover over the running pipeline and select **Cancel** to cancel the execution of the current instance of the pipeline.
+
+    ![The Cancel option is highlighted.](media/ex7-task4-03.png "Cancel")
+
 ### Task 5: Monitoring SQL Requests with the Monitor Hub
 
 ## After the hands-on lab
