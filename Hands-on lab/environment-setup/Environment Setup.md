@@ -8,6 +8,8 @@ A SQL Pool named `SQLPool01` with a database name `SQLPool01`
 * wwi-02/sales-small/Year=2019/*
 * wwi-02/customer-info/customer-info.csv
 * wwi-02/campaign-analytics/campaignanalytics.csv
+* wwi-02/data-generators/generator-product/generator-product.csv
+* From /Resources/json-data/*.* put it in wwi-02/product-json/*.*
 
 ## SQL Pool Logins
 * asa.sql.workload01

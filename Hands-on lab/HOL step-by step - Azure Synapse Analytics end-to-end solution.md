@@ -43,9 +43,12 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 5: Create the sale table](#task-5-create-the-sale-table)
     - [Task 6: Populate the sale table](#task-6-populate-the-sale-table)
     - [Task 7: Populate the product table](#task-7-populate-the-product-table)
-  - [Exercise 3: Exploring raw data](#exercise-3-exploring-raw-data)
+  - [Exercise 3: Exploring raw parquet data](#exercise-3-exploring-raw-parquet-data)
     - [Task 1: Query sales Parquet data with Synapse SQL Serverless](#task-1-query-sales-parquet-data-with-synapse-sql-serverless)
     - [Task 2: Query sales Parquet data with Azure Synapse Spark](#task-2-query-sales-parquet-data-with-azure-synapse-spark)
+  - [Exercise 4: Exploring raw text based data with Azure Synapse SQL Serverless](#exercise-4-exploring-raw-text-based-data-with-azure-synapse-sql-serverless)
+    - [Task 1: Query CSV data](#task-1-query-csv-data)
+    - [Task 2: Query JSON data](#task-2-query-json-data)
   - [Exercise 5: Security](#exercise-5-security)
     - [Task 1: Column level security](#task-1-column-level-security)
     - [Task 2: Row level security](#task-2-row-level-security)
@@ -61,6 +64,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
     - [Task 4: Orchestration Monitoring with the Monitor Hub](#task-4-orchestration-monitoring-with-the-monitor-hub)
     - [Task 5: Monitoring SQL Requests with the Monitor Hub](#task-5-monitoring-sql-requests-with-the-monitor-hub)
   - [After the hands-on lab](#after-the-hands-on-lab)
+    - [Task 1: Delete the resource group](#task-1-delete-the-resource-group)
 <!-- /TOC -->
 
 # Azure Synapse Analytics end-to-end solution hands-on lab step-by-step
@@ -71,15 +75,19 @@ In this hands-on-lab, you will build an end-to-end data analytics with machine l
 
 ## Overview
 
-TODO: at the end make sure we include an outline of features used in this lab
+In this lab various features of Azure Synapse Analytics will be explored. Azure Synapse Analytics Studio is a single tool that every team member can use collaboratively. Synapse Studio will be the only tool used throughout this lab through data ingestion, cleaning, and transforming raw files to using Notebooks to train, register, and consume a Machine learning model. The lab will also provide hands-on-experience monitoring and prioritizing data related workloads.
 
 ## Solution architecture
 
-TODO: at the end make sure we include diagram of all features of this lab
+![Architecture diagram explained in the next paragraph.](media/archdiagram.png)
+
+This lab explores the cold data scenario of ingesting various types of raw data files. These files can exist anywhere. The file types used in this lab are CSV, parquet, and JSON. This data will be ingested into Synapse Analytics via Pipelines. From there, the data can be transformed and enriched using various tools such as data flows, Synapse Spark, and Synapse SQL (both provisioned and serverless). Once processed, data can be queried using Synapse SQL tooling. Azure Synapse Studio also provides the ability to author notebooks to further process data, create datasets, train, and create machine learning models. These models can then be stored in a storage account or even in a SQL table. These models can then be consumed via various methods, including T-SQL. The foundational component supporting all aspects of Azure Synapse Analytics is the ADLS Gen 2 Data Lake.
 
 ## Requirements
 
 1. Microsoft Azure subscription
+
+2. Azure Synapse Workspace / Studio
 
 ## Before the hands-on lab
 
@@ -87,7 +95,7 @@ Refer to the Before the hands-on lab setup guide manual before continuing to the
 
 ## Resource naming throughout this lab
 
-For the remainder of this guide, the following terms will be used for various ASA (Azure Synapse Analytics) related resources (make sure you replace them with actual names and values from your environment):
+For the remainder of this lab, the following terms will be used for various ASA (Azure Synapse Analytics) related resources (make sure you replace them with actual names and values from your environment):
 
 | Azure Synapse Analytics Resource  | To be referred to                                                                  |
 |-----------------------------------|------------------------------------------------------------------------------------|
@@ -124,8 +132,6 @@ All exercises in this lab utilize the workspace Synapse Studio user interface. T
     ![On the Synapse workspace resource screen, the Overview pane is shown with the Launch Synapse Studio button highlighted in the top toolbar. The Workspace web URL value is also highlighted.](media/workspaceresource_launchsynapsestudio.png)
 
 ## Exercise 2: Create and populate the supporting tables in the SQL Pool
-
-Duration: X minutes
 
 The first step in querying meaningful data is to create tables to house the data. In this case, we will create two different tables: CustomerInfo and Sales. When designing tables in Azure Synapse Analytics, we need to take into account the expected amount of data in each table, as well as how each table will be used. Utilize the following guidance when designing your tables to ensure the best experience and performance.
 
@@ -755,7 +761,7 @@ When the lab environment was provisioned, the **wwi_mcw.Product** table and data
     select * from wwi_mcw.Product;
   ```
 
-## Exercise 3: Exploring raw data
+## Exercise 3: Exploring raw parquet data
 
 Understanding data through data exploration is one of the core challenges faced today by data engineers and data scientists as well. Depending on the underlying structure of the data as well as the specific requirements of the exploration process, different data processing engines will offer varying degrees of performance, complexity, and flexibility.
 
@@ -873,6 +879,105 @@ When you query Parquet files using Synapse SQL Serverless, you can explore the d
     ```
 
  > We import required Python libraries to use aggregation functions and types defined in the schema to successfully execute the query.
+
+## Exercise 4: Exploring raw text based data with Azure Synapse SQL Serverless
+
+A common format for exporting and storing data is with text based files. These can delimited text files such as CSV as well as JSON structured data files. Azure Synapse Analytics also provides ways of querying into these types of raw files to gain valuable insights into the data without having to wait for them to be processed.
+
+### Task 1: Query CSV data
+
+1. Create a new SQL Script by selecting **Develop** from the left menu, then in the **Develop** blade, expanding the **+** button and selecting **SQL Query**.
+
+2. Ensure **SQL on-demand** is selected in the **Connect to** dropdown list above the query window.
+
+    ![The SQL on-demand connection is highlighted on the query window toolbar.](media/sql-on-demand-selected.png "SQL on-demand")
+
+3. In this scenario, we will be querying into the CSV file that was used to populate the product table. This file is located in the `PrimaryStorage` account at: **wwi-02/data-generators/generator-product.csv**. We will select all data from this file. Copy and paste the following query into the query window and select **Run** from the query window toolbar menu. Remember to replace `PrimaryStorage` with your storage account name.
+
+    ```sql
+    SELECT
+       csv.*
+    FROM
+        OPENROWSET(
+            BULK 'https://<PrimaryStorage>.dfs.core.windows.net/wwi-02/data-generators/generator-product.csv',
+            FORMAT='CSV',
+            FIRSTROW = 1
+        ) WITH (
+            ProductID INT,
+            Seasonality INT,
+            Price DECIMAL(10,2),
+            Profit DECIMAL(10,2)
+        ) as csv
+    ```
+
+    > **Note**: In this query we are querying only a single file. Azure Synapse Analytics allows you to query across a series of CSV files (structured identically) by using wildcards in the path to the file(s).
+
+4. You are also able to perform aggregations on this data. Replace the query with the following, and select **Run** from the toolbar menu. Remember to replace `PrimaryStorage` with your storage account name.
+
+    ```sql
+    SELECT
+        Seasonality,
+        SUM(Price) as TotalSalesPrice,
+        SUM(Profit) as TotalProfit
+    FROM
+        OPENROWSET(
+            BULK 'https://<PrimaryStorage>.dfs.core.windows.net/wwi-02/data-generators/generator-product.csv',
+            FORMAT='CSV',
+            FIRSTROW = 1
+        ) WITH (
+            ProductID INT,
+            Seasonality INT,
+            Price DECIMAL(10,2),
+            Profit DECIMAL(10,2)
+        ) as csv
+    GROUP BY
+        csv.Seasonality
+    ```
+
+5. After you have run the previous query, switch the view on the **Results** tab to **Chart** to see a visualization of the aggregation of this data. Feel free to experiment with the chart settings to obtain the best visualization!
+
+    ![The result of the previous aggregation query is displayed as a chart in the Results pane.](media/querycsv_serverless_chart.png)
+
+6. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
+
+### Task 2: Query JSON data
+
+1. Create a new SQL Script by selecting **Develop** from the left menu, then in the **Develop** blade, expanding the **+** button and selecting **SQL Query**.
+
+2. Ensure **SQL on-demand** is selected in the **Connect to** dropdown list above the query window.
+
+    ![The SQL on-demand connection is highlighted on the query window toolbar.](media/sql-on-demand-selected.png "SQL on-demand")
+
+3. Replace the query with the following, remember to replace `PrimaryStorage` with the name of your storage account:
+
+    ```sql
+    SELECT
+        products.*
+    FROM
+        OPENROWSET(
+            BULK 'https://<PrimaryStorage>.dfs.core.windows.net/wwi-02/product-json/*.json',
+            FORMAT='CSV',
+            FIELDTERMINATOR ='0x0b',
+            FIELDQUOTE = '0x0b',
+            ROWTERMINATOR = '0x0b'
+        )
+        WITH (
+            jsonContent NVARCHAR(200)
+        ) AS [raw]
+    CROSS APPLY OPENJSON(jsonContent)
+    WITH (
+        ProductId INT,
+        Seasonality INT,
+        Price DECIMAL(10,2),
+        Profit DECIMAL(10,2)
+    ) AS products
+    ```
+
+4. From the top toolbar, select the **Discard all** button as we will not be saving this query. When prompted, choose to **Discard all changes**.
+
+   ![The top toolbar menu is displayed with the Discard all button highlighted.](media/toptoolbar_discardall.png)
 
 ## Exercise 5: Security
 
@@ -1281,7 +1386,7 @@ In this task, you will author a T-SQL query that uses the previously trained mod
 
 ## Exercise 7: Monitoring
 
-Azure Synapse Analytics provides a rich monitoring experience within the Azure portal to surface insights regarding your data warehouse workload. 
+Azure Synapse Analytics provides a rich monitoring experience within the Azure portal to surface insights regarding your data warehouse workload.
 
 You can monitor active SQL requests using the SQL requests area of the Monitor Hub. This includes details like the pool, submitter, duration, queued duration, workload group assigned, importance, and the request content.
 
@@ -1314,11 +1419,11 @@ Setting importance in Synapse SQL for Azure Synapse allows you to influence the 
     ```sql
     --First, let's confirm that there are no queries currently being run by users logged in as CEONYC or AnalystNYC.
 
-    SELECT s.login_name, r.[Status], r.Importance, submit_time, 
-    start_time ,s.session_id FROM sys.dm_pdw_exec_sessions s 
+    SELECT s.login_name, r.[Status], r.Importance, submit_time,
+    start_time ,s.session_id FROM sys.dm_pdw_exec_sessions s
     JOIN sys.dm_pdw_exec_requests r ON s.session_id = r.session_id
     WHERE s.login_name IN ('asa.sql.workload01','asa.sql.workload02') and Importance
-    is not NULL AND r.[status] in ('Running','Suspended') 
+    is not NULL AND r.[status] in ('Running','Suspended')
     --and submit_time>dateadd(minute,-2,getdate())
     ORDER BY submit_time ,s.login_name
     ```
@@ -1334,7 +1439,7 @@ Setting importance in Synapse SQL for Azure Synapse allows you to influence the 
 7. Let's see what happened to all the queries we just triggered as they flood the system. In the query window, replace the script with the following:
 
     ```sql
-    SELECT s.login_name, r.[Status], r.Importance, submit_time, start_time ,s.session_id FROM sys.dm_pdw_exec_sessions s 
+    SELECT s.login_name, r.[Status], r.Importance, submit_time, start_time ,s.session_id FROM sys.dm_pdw_exec_sessions s
     JOIN sys.dm_pdw_exec_requests r ON s.session_id = r.session_id
     WHERE s.login_name IN ('asa.sql.workload01','asa.sql.workload02') and Importance
     is not NULL AND r.[status] in ('Running','Suspended') and submit_time>dateadd(minute,-2,getdate())
@@ -1364,7 +1469,7 @@ Setting importance in Synapse SQL for Azure Synapse allows you to influence the 
 12. In the query window, replace the script with the following to see what happens to the `asa.sql.workload01` queries this time:
 
     ```sql
-    SELECT s.login_name, r.[Status], r.Importance, submit_time, start_time ,s.session_id FROM sys.dm_pdw_exec_sessions s 
+    SELECT s.login_name, r.[Status], r.Importance, submit_time, start_time ,s.session_id FROM sys.dm_pdw_exec_sessions s
     JOIN sys.dm_pdw_exec_requests r ON s.session_id = r.session_id
     WHERE s.login_name IN ('asa.sql.workload01','asa.sql.workload02') and Importance
     is not NULL AND r.[status] in ('Running','Suspended') and submit_time>dateadd(minute,-2,getdate())
@@ -1587,7 +1692,7 @@ All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This
     ![The query results are displayed.](media/sql-dsql-plan-results.png "Query results")
 
     > When a DSQL plan is taking longer than expected, the cause can be a complex plan with many DSQL steps or just one step taking a long time. If the plan is many steps with several move operations, consider optimizing your table distributions to reduce data movement.
-    
+
 ### Task 4: Orchestration Monitoring with the Monitor Hub
 
 1. Let's run a pipeline to monitor its execution in the next step. To do this, select the `Orchestrate` Tab. **Run** the **Exercise 7 - Execute Business Analyst Queries** Pipeline.
@@ -1617,9 +1722,11 @@ All logins to your data warehouse are logged to `sys.dm_pdw_exec_sessions`. This
 4. Hover onto a SQL Request log and select `Request Content` to access the actual T-SQL command executed as part of the SQL Request.
 
     ![The request content link is displayed over a SQL request.](media/ex7-task5-03.png "SQL requests")
-    
+  
 ## After the hands-on lab
 
-Duration: X minutes
+### Task 1: Delete the resource group
+
+1. In the Azure Portal, open the resource group for this lab. Select **Delete** from the top toolbar menu.
 
 You should follow all steps provided *after* attending the Hands-on lab.
